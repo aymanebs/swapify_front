@@ -1,28 +1,39 @@
-import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
-
 export default function ProductCard({ product }) {
   return (
-    <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl">
-      <img
-        src={product.image}
-        alt={product.title}
-        fill
-        className="object-cover transition-transform duration-500 group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
-      
-      <div className="absolute inset-0 p-6 flex flex-col justify-end translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
-        <h2 className="text-2xl font-bold text-white mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-          {product.title}
-        </h2>
-        <Link href="/products">
-        <button className="w-fit opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200 inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-white/20">
-          <span>View Details</span>
-          <ArrowRight className="h-4 w-4" />
-        </button>
-        </Link>
-      </div>
+    <div className="w-[16rem] bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
+      <a href="#">
+        <img
+          src={product.image}
+          alt="Product"
+          className="h-[13rem] w-[16rem] object-cover rounded-t-xl"
+        />
+        <div className="px-3 py-1 w-[16rem]">
+          <p className="text-md font-bold text-black truncate block capitalize">{product.name}</p>
+          <span className="text-gray-400 mr-3 uppercase text-xs">Posted by :</span>
+          <div className="flex items-center">
+            <p className="text-md font-semibold text-black cursor-auto my-2">$149</p>
+            <del>
+              <p className="text-xs text-gray-600 cursor-auto ml-2">$199</p>
+            </del>
+            <div className="ml-auto">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-bag-plus"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"
+                />
+                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </a>
     </div>
   );
 }

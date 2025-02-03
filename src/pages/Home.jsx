@@ -1,4 +1,6 @@
 import { Banner } from "../components/Banner";
+import { Cta } from "../components/Cta";
+import HowItWorks from "../components/HowItWorks";
 import Newsletter from "../components/Newsletter";
 import ProductGrid from "../components/ProductGrid";
 import Stats from "../components/Stats";
@@ -22,12 +24,17 @@ const Home =()=>{
       </section>
 
       {/* About Us Section */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
-        {/* <Cta /> */}
+      <section className="py-16 bg-gradient-to-b from-blue-100 to-blue-50">
+        <Cta />
+      </section>
+
+         {/* How it works Section */}
+         <section className=" bg-gradient-to-b from-blue-50 to-white">
+        <HowItWorks/>
       </section>
 
       {/* Products Section */}
-      <section className="py-16 bg-white">
+      <section className=" bg-white">
         <ProductGrid />
       </section>
 
