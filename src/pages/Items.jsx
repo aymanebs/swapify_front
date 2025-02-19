@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Sliders, Package, Star, Heart, ChevronDown, X, ArrowRight, Sparkles, TrendingUp, Users, Gift, ShoppingBag, Clock, MapPin, Zap, Shield, Trophy } from 'lucide-react';
+import { Search, Sliders, Package, Star, Heart, ChevronDown, X, ArrowRight, Sparkles, TrendingUp, Users, Gift, ShoppingBag, Clock, MapPin, Zap, Shield, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
 export const Items = ()=> {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [condition, setCondition] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 8;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,12 +31,6 @@ export const Items = ()=> {
     { name: 'Fashion', count: 278, image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=500' },
   ];
 
-  const features = [
-    { icon: Zap, title: 'Lightning Fast', description: 'Trade items instantly with our quick match system' },
-    { icon: Shield, title: 'Secure Trading', description: 'Your items are protected with our secure system' },
-    { icon: Trophy, title: 'Rewards Program', description: 'Earn points with every successful trade' },
-  ];
-
   const featuredCollections = [
     { title: 'New Arrivals', icon: ShoppingBag, count: 156 },
     { title: 'Ending Soon', icon: Clock, count: 89 },
@@ -47,6 +43,90 @@ export const Items = ()=> {
         ? prev.filter(c => c !== category)
         : [...prev, category]
     );
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({
+      top: document.getElementById("productsSection").offsetTop - 100,
+      behavior: "smooth"
+    });
+  };
+
+  const renderPaginationItems = () => {
+    const items = [];
+    const showEllipsis = totalPages > 7;
+    
+    if (showEllipsis) {
+      // Always show first page
+      items.push(
+        <button 
+          key={1} 
+          onClick={() => handlePageChange(1)}
+          className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === 1 ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-50'}`}
+        >
+          1
+        </button>
+      );
+      
+      // Show ellipsis if not on first few pages
+      if (currentPage > 3) {
+        items.push(
+          <span key="ellipsis1" className="h-10 w-10 flex items-center justify-center">
+            ...
+          </span>
+        );
+      }
+      
+      // Show current page and neighbors
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        if (i === 1 || i === totalPages) continue; // Skip first and last pages as they're always shown
+        items.push(
+          <button 
+            key={i} 
+            onClick={() => handlePageChange(i)}
+            className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === i ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-50'}`}
+          >
+            {i}
+          </button>
+        );
+      }
+      
+      // Show ellipsis if not on last few pages
+      if (currentPage < totalPages - 2) {
+        items.push(
+          <span key="ellipsis2" className="h-10 w-10 flex items-center justify-center">
+            ...
+          </span>
+        );
+      }
+      
+      // Always show last page
+      items.push(
+        <button 
+          key={totalPages} 
+          onClick={() => handlePageChange(totalPages)}
+          className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === totalPages ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-50'}`}
+        >
+          {totalPages}
+        </button>
+      );
+    } else {
+      // Show all page numbers if there aren't too many
+      for (let i = 1; i <= totalPages; i++) {
+        items.push(
+          <button 
+            key={i} 
+            onClick={() => handlePageChange(i)}
+            className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === i ? 'bg-blue-600 text-white' : 'text-blue-600 hover:bg-blue-50'}`}
+          >
+            {i}
+          </button>
+        );
+      }
+    }
+    
+    return items;
   };
 
   return (
@@ -98,27 +178,6 @@ export const Items = ()=> {
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="bg-white w-full py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
-            <p className="text-lg text-blue-600">Experience the future of trading</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map(({ icon: Icon, title, description }) => (
-              <div key={title} className="group p-6 bg-gradient-to-br from-blue-50 to-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Icon className="w-6 h-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-                <p className="text-blue-600">{description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Search Header */}
       <div className={`bg-white sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -147,7 +206,7 @@ export const Items = ()=> {
         <div className="mb-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {featuredCollections.map(({ title, icon: Icon, count }) => (
-              <div key={title} className="group bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl p-6 text-white hover:scale-[1.02] transition-all duration-300 cursor-pointer relative overflow-hidden">
+              <div key={title} className="group bg-gradient-to-br from-blue-400 to-blue-400 rounded-xl p-6 text-white hover:scale-[1.02] transition-all duration-300 cursor-pointer relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <Icon className="w-8 h-8 mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-xl font-semibold mb-2">{title}</h3>
@@ -187,7 +246,7 @@ export const Items = ()=> {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8" id="productsSection">
           {/* Filters Sidebar */}
           <div className={`lg:w-72 space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
             {/* Categories */}
@@ -258,7 +317,7 @@ export const Items = ()=> {
           {/* Items Grid */}
           <div className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map(item => (
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(item => (
                 <div key={item} className="group bg-white rounded-xl shadow-sm overflow-hidden border border-blue-100 hover:shadow-lg transition-all duration-300">
                   <div className="relative">
                     <img
@@ -297,10 +356,99 @@ export const Items = ()=> {
                 </div>
               ))}
             </div>
+            
+            {/* Pagination */}
+            <div className="mt-12 flex flex-col items-center">
+              <div className="flex items-center justify-center space-x-2">
+                <button 
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="h-10 w-10 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                
+                <div className="flex space-x-2">
+                  {renderPaginationItems()}
+                </div>
+                
+                <button 
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="h-10 w-10 flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:pointer-events-none transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <p className="mt-4 text-sm text-blue-600">
+                Showing page {currentPage} of {totalPages} ({(currentPage - 1) * 12 + 1}-{Math.min(currentPage * 12, totalPages * 12)} of {totalPages * 12} items)
+              </p>
+            </div>
           </div>
         </div>
+        
+{/* Community Connection Section */}
+        <div className="mt-20 mb-16">
+          <div className="bg-gradient-to-r from-blue-50 to-blue-50 rounded-2xl overflow-hidden shadow-md">
+            <div className="grid md:grid-cols-2 gap-0">
+              <div className="p-8 md:p-12 flex flex-col justify-center">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-sm font-medium mb-6 w-fit">
+                  <Users className="w-4 h-4" /> Community Stories
+                </span>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Share Your Trading Journey</h2>
+                <p className="text-lg text-blue-700 mb-8">
+                  Connect with fellow traders, share your unique finds, and discover the stories behind every swap.
+                </p>
+                <div className="space-y-4 mb-8">
+                  {[
+                    "Join local trading circles in your neighborhood",
+                    "Participate in seasonal community swap events",
+                    "Share the stories behind your most meaningful trades",
+                    "Connect with like-minded traders worldwide"
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center mt-1">
+                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 3.5L4 6.5L9 1.5" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <p className="text-blue-800">{feature}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-4 flex-wrap">
+                  <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors shadow-lg shadow-blue-500/20">
+                    Find Local Swaps
+                  </button>
+                  <button className="px-6 py-3 bg-transparent border border-blue-300 text-blue-600 hover:bg-blue-50 rounded-xl font-medium transition-colors">
+                    Share Your Story
+                  </button>
+                </div>
+              </div>
+              <div className="relative h-64 md:h-auto overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80" 
+                  alt="Community trading event" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-500/30 mix-blend-multiply" />
+                <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-gray-900 font-semibold">120+ Local Communities</p>
+                      <p className="text-blue-500 text-sm">Find swapping events near you</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>     
       </div>
     </div>
   );
 }
-

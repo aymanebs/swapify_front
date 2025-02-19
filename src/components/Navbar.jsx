@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ArrowLeftRight, LogIn, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
+import LoginModal from "./LoginModal";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +49,7 @@ export const Navbar = () => {
             {/* Auth Buttons - Desktop */}
             <div className="hidden md:flex items-center gap-3">
               <Link
-                href="/login"
+                onClick={() => setIsLoginModalOpen(true)}
                 className="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-all duration-300"
               >
                 <LogIn className="h-4 w-4" />
@@ -90,9 +92,9 @@ export const Navbar = () => {
             {/* Auth Buttons - Mobile */}
             <div className="flex flex-col gap-3 pt-2">
               <Link
-                href="/login"
+                onClick={() => setIsLoginModalOpen(true)}
                 className="flex items-center justify-center gap-2 text-gray-700 hover:text-blue-600 transition-all duration-300"
-                onClick={() => setIsMenuOpen(false)}
+               
               >
                 <LogIn className="h-4 w-4" />
                 <span className="text-sm font-medium">Login</span>
@@ -108,6 +110,11 @@ export const Navbar = () => {
             </div>
           </nav>
         </div>
+        {/* Login Modal */}
+        <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
       </div>
     </header>
   );
