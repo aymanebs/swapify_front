@@ -138,7 +138,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
         <p className="mt-6 text-sm text-center text-gray-600">
           Don't have an account?{' '}
-          <a href="#" className="font-medium text-blue-600 hover:underline">
+          <a href="/register" className="font-medium text-blue-600 hover:underline">
             Sign up
           </a>
         </p>

@@ -17,13 +17,15 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-white/95 backdrop-blur-sm shadow-md" : "bg-white"
-    }`}>
-      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+    <header 
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-white/95 backdrop-blur-sm shadow-md" : "bg-white"
+      }`}
+    >
+      <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between w-full">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-all duration-300 transform hover:scale-105">
+          <Link to="/" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-all duration-300 transform hover:scale-105">
             <ArrowLeftRight className="h-8 w-8" />
             <span className="text-xl font-bold">Swapify</span>
           </Link>
@@ -34,7 +36,7 @@ export const Navbar = () => {
               {["Items", "About Us", "Contact"].map((item) => (
                 <Link
                   key={item}
-                  href={`${item.toLowerCase().replace(" ", "-")}`}
+                  to={`/${item.toLowerCase().replace(" ", "-")}`}
                   className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-all duration-300 relative group"
                 >
                   {item}
@@ -56,7 +58,7 @@ export const Navbar = () => {
                 <span className="text-sm font-medium">Login</span>
               </Link>
               <Link
-                href="/register"
+                to="/register"
                 className="flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5"
               >
                 <UserPlus className="h-4 w-4" />
@@ -75,47 +77,50 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden absolute left-0 right-0 bg-white border-b border-blue-100 transition-all duration-300 ${
-          isMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
-        }`}>
-          <nav className="flex flex-col space-y-4 px-4 py-6">
-            {["Products", "About Us", "Contact"].map((item) => (
-              <Link
-                key={item}
-                href={`${item.toLowerCase().replace(" ", "-")}`}
-                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-all duration-300"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item}
-              </Link>
-            ))}
-            {/* Auth Buttons - Mobile */}
-            <div className="flex flex-col gap-3 pt-2">
-              <Link
-                onClick={() => setIsLoginModalOpen(true)}
-                className="flex items-center justify-center gap-2 text-gray-700 hover:text-blue-600 transition-all duration-300"
-               
-              >
-                <LogIn className="h-4 w-4" />
-                <span className="text-sm font-medium">Login</span>
-              </Link>
-              <Link
-                href="/register"
-                className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-blue-700"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <UserPlus className="h-4 w-4" />
-                <span>Register</span>
-              </Link>
-            </div>
-          </nav>
-        </div>
-        {/* Login Modal */}
-        <LoginModal 
+        {isMenuOpen && (
+          <div className="md:hidden w-full bg-white border-b border-blue-100 shadow-lg">
+            <nav className="flex flex-col space-y-4 px-4 py-6">
+              {["Items", "About Us", "Contact"].map((item) => (
+                <Link
+                  key={item}
+                  to={`/${item.toLowerCase().replace(" ", "-")}`}
+                  className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-all duration-300"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item}
+                </Link>
+              ))}
+              {/* Auth Buttons - Mobile */}
+              <div className="flex flex-col gap-3 pt-2">
+                <button
+                  onClick={() => {
+                    setIsLoginModalOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center justify-center gap-2 text-gray-700 hover:text-blue-600 transition-all duration-300"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span className="text-sm font-medium">Login</span>
+                </button>
+                <Link
+                  to="/register"
+                  className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-blue-700"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <UserPlus className="h-4 w-4" />
+                  <span>Register</span>
+                </Link>
+              </div>
+            </nav>
+          </div>
+        )}
+      </div>
+      
+      {/* Login Modal */}
+      <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
       />
-      </div>
     </header>
   );
 };
