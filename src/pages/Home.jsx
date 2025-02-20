@@ -39,17 +39,17 @@ const Home =()=>{
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-blue-50">
+      <section className="py-12 bg-blue-50">
         <Testimonials />
       </section>
 
       {/* Partners */}
-      <section className="py-12 bg-white">
+      {/* <section className="py-12 bg-white"> */}
         {/* <Partners /> */}
-      </section>
+      {/* </section> */}
 
       {/* Newsletter */}
-      <section className="py-16 bg-white">
+      <section className=" bg-white">
         <Newsletter />
       </section>
 

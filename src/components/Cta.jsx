@@ -52,7 +52,7 @@ export const Cta = () => {
 
       <div className="flex justify-center">
         <Link
-          to="/products"
+          to="/items"
           className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors"
         >
           <span>Exchange Items</span>
