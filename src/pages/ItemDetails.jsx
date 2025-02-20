@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { MessageCircle, Share2, Flag, Heart, UserCircle2, Star, MapPin, Calendar, Package } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ItemDetails = () => {
   
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
+    let navigate = useNavigate();
   
     const images = [
       'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
@@ -18,7 +20,6 @@ const ItemDetails = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4">
     <main className="max-w-7xl mx-auto mt-16 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Image Section */}
         <div className="space-y-6">
           <div className="relative group">
             <img
@@ -63,7 +64,6 @@ const ItemDetails = () => {
           </div>
         </div>
 
-        {/* Details Section */}
         <div className="space-y-8">
           <div className="space-y-4">
             <div className="flex items-start justify-between">
@@ -154,11 +154,14 @@ const ItemDetails = () => {
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              <button className="w-full py-4 px-6 bg-gray-900 text-gray-50 font-medium rounded-xl hover:bg-gray-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg flex items-center justify-center">
+              {/* <button className="w-full py-4 px-6 bg-gray-900 text-gray-50 font-medium rounded-xl hover:bg-gray-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg flex items-center justify-center">
                 <MessageCircle className="w-5 h-5 mr-2" />
                 Message
-              </button>
-              <button className="w-full py-4 px-6 bg-blue-600 text-emerald-50 font-medium rounded-xl hover:bg-blue-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg">
+              </button> */}
+              <button
+               className="w-full py-4 px-6 bg-blue-600 text-emerald-50 font-medium rounded-xl hover:bg-blue-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+               onClick={()=>navigate('/swap')}
+               >
                 Propose Swap
               </button>
             </div>

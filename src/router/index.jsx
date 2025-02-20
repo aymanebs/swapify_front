@@ -5,6 +5,7 @@ import ItemDetails from "../pages/ItemDetails";
 import { Items } from "../pages/Items";
 import { Register } from "../pages/Register";
 import Contact from "../pages/Contact";
+import Swap from "../pages/Swap";
 
 
 const AppRouter = () =>{
@@ -17,7 +18,9 @@ const AppRouter = () =>{
                 <Route path="/" element={<Home/>}/>
                 <Route path="/items" element={<Items/>}/>
                 <Route path="/itemDetails" element={<ItemDetails/>}/>
+                <Route path="swap" element={<Swap/>}/>
                 <Route path="contact" element={<Contact/>}/>
+                
             </Route>
 
         </Routes>
