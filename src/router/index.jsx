@@ -6,6 +6,9 @@ import { Items } from "../pages/Items";
 import { Register } from "../pages/Register";
 import Contact from "../pages/Contact";
 import Swap from "../pages/Swap";
+import Profile from "../pages/Profile";
+import DashLayout from "../components/layouts/DashLayout";
+import HomeDash from "../pages/Dashboard";
 
 
 const AppRouter = () =>{
@@ -20,7 +23,10 @@ const AppRouter = () =>{
                 <Route path="/itemDetails" element={<ItemDetails/>}/>
                 <Route path="swap" element={<Swap/>}/>
                 <Route path="contact" element={<Contact/>}/>
-                
+                <Route path="profile" element={<Profile/>}/>            
+            </Route>
+            <Route element={<DashLayout/>}>
+                <Route path="/dashboard" element={<HomeDash/>}/>
             </Route>
 
         </Routes>

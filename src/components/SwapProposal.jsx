@@ -58,18 +58,18 @@ const SwapProposal = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-xl p-8 border border-blue-100">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 pb-6 border-b border-blue-100">
+    <div className="bg-gradient-to-br from-white to-sky-50 rounded-xl shadow-xl p-8 border border-sky-100">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 pb-6 border-b border-sky-100">
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text flex items-center">
-            <RefreshCw className="h-6 w-6 mr-2 text-blue-600" />
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-sky-600 text-transparent bg-clip-text flex items-center">
+            <RefreshCw className="h-6 w-6 mr-2 text-sky-600" />
             Make a Swap Proposal
           </h2>
           <p className="text-gray-600 mt-1">Select an item to trade for {swapTargetItem.owner}'s {swapTargetItem.name}</p>
         </div>
-        <div className="flex items-center mt-4 md:mt-0 p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-inner">
-          <Shield className="h-5 w-5 text-blue-600" />
-          <span className="ml-2 text-sm font-medium text-blue-800">Premium Swap Protection</span>
+        <div className="flex items-center mt-4 md:mt-0 p-2 bg-gradient-to-r from-sky-50 to-sky-50 rounded-lg shadow-inner">
+          <Shield className="h-5 w-5 text-sky-600" />
+          <span className="ml-2 text-sm font-medium text-sky-800">Premium Swap Protection</span>
         </div>
       </div>
       
@@ -77,7 +77,7 @@ const SwapProposal = () => {
       <div className="flex flex-col md:flex-row items-center justify-between p-4 mb-8 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
         <div className="flex items-center mb-4 md:mb-0">
           <div className="relative group">
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-400/20 to-indigo-400/20 animate-pulse group-hover:opacity-0 transition-opacity"></div>
+            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-sky-400/20 to-sky-400/20 animate-pulse group-hover:opacity-0 transition-opacity"></div>
             <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden border-2 border-white shadow-md">
               {selectedItem ? (
                 <img 
@@ -104,8 +104,8 @@ const SwapProposal = () => {
         </div>
         
         <div className="flex items-center justify-center my-4 md:my-0">
-          <ArrowRight className="hidden md:block h-6 w-6 text-blue-500 mx-6" />
-          <div className="md:hidden h-px w-24 bg-gradient-to-r from-transparent via-blue-300 to-transparent my-2"></div>
+          <ArrowRight className="hidden md:block h-6 w-6 text-sky-500 mx-6" />
+          <div className="md:hidden h-px w-24 bg-gradient-to-r from-transparent via-sky-300 to-transparent my-2"></div>
         </div>
         
         <div className="flex items-center">
@@ -128,10 +128,10 @@ const SwapProposal = () => {
         <div>
           <div className="flex items-center justify-between mb-4">
             <label className="flex items-center text-lg font-semibold text-gray-900">
-              <Package2 className="h-5 w-5 mr-2 text-blue-600" />
+              <Package2 className="h-5 w-5 mr-2 text-sky-600" />
               Select an item to offer
             </label>
-            <span className="text-sm text-blue-600 font-medium">{selectedItem ? '1' : '0'}/1 Selected</span>
+            <span className="text-sm text-sky-600 font-medium">{selectedItem ? '1' : '0'}/1 Selected</span>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -140,7 +140,7 @@ const SwapProposal = () => {
                 key={item.id}
                 className={`group relative rounded-xl transition-all duration-300 overflow-hidden ${
                   selectedItem === item.id
-                    ? 'ring-4 ring-blue-500 ring-offset-2 scale-105 z-10'
+                    ? 'ring-4 ring-sky-500 ring-offset-2 scale-105 z-10'
                     : 'hover:shadow-2xl hover:translate-y-1 border border-gray-200'
                 }`}
                 onClick={() => setSelectedItem(item.id)}
@@ -161,7 +161,7 @@ const SwapProposal = () => {
                     <span className="bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
                       ${item.value}
                     </span>
-                    <span className="bg-blue-500/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-sky-500/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
                       {item.condition}
                     </span>
                   </div>
@@ -174,7 +174,7 @@ const SwapProposal = () => {
                 </div>
                 
                 {/* Additional info panel */}
-                <div className={`p-4 bg-white border-t border-gray-100 ${selectedItem === item.id ? 'bg-blue-50' : ''}`}>
+                <div className={`p-4 bg-white border-t border-gray-100 ${selectedItem === item.id ? 'bg-sky-50' : ''}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
@@ -198,7 +198,7 @@ const SwapProposal = () => {
                   
                   {/* Selection indicator */}
                   {selectedItem === item.id && (
-                    <div className="mt-3 flex items-center justify-center bg-blue-600 text-white rounded-lg p-2">
+                    <div className="mt-3 flex items-center justify-center bg-sky-600 text-white rounded-lg p-2">
                       <Check className="h-4 w-4 mr-1" />
                       <span className="text-sm font-medium">Selected for Swap</span>
                     </div>
@@ -211,7 +211,7 @@ const SwapProposal = () => {
 
         <div className="space-y-2 bg-white p-6 rounded-xl shadow-md border border-gray-200">
           <label className="block text-lg font-semibold text-gray-900 flex items-center">
-            <MessageCircle className="h-5 w-5 mr-2 text-blue-600" />
+            <MessageCircle className="h-5 w-5 mr-2 text-sky-600" />
             Message to seller
           </label>
           <p className="text-sm text-gray-500 mb-3">
@@ -220,7 +220,7 @@ const SwapProposal = () => {
           <div className="relative">
             <textarea
               rows={4}
-              className="block w-full rounded-xl border-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-30 resize-none"
+              className="block w-full rounded-xl border-gray-200 shadow-sm focus:border-sky-500 focus:ring focus:ring-sky-200 focus:ring-opacity-30 resize-none"
               placeholder="Hi! I'm interested in swapping because..."
               value={message}
               onChange={handleMessageChange}
@@ -242,7 +242,7 @@ const SwapProposal = () => {
           disabled={!selectedItem}
           className={`w-full px-6 py-4 rounded-xl shadow-lg flex items-center justify-center space-x-3 font-semibold text-lg transition-all duration-300 ${
             selectedItem 
-              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transform hover:-translate-y-1 hover:shadow-xl' 
+              ? 'bg-gradient-to-r from-sky-600 to-sky-600 hover:from-sky-700 hover:to-sky-700 text-white transform hover:-translate-y-1 hover:shadow-xl' 
               : 'bg-gray-100 text-gray-400 cursor-not-allowed'
           }`}
         >
@@ -253,7 +253,7 @@ const SwapProposal = () => {
       </form>
       
       {/* Trust indicators */}
-      <div className="mt-8 flex items-center justify-center space-x-6 text-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
+      <div className="mt-8 flex items-center justify-center space-x-6 text-center p-4 bg-gradient-to-r from-sky-50 to-sky-50 rounded-xl">
         <div className="flex flex-col items-center">
           <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mb-2">
             <Shield className="h-5 w-5 text-green-600" />
@@ -261,8 +261,8 @@ const SwapProposal = () => {
           <span className="text-xs text-gray-700">Secure Swap</span>
         </div>
         <div className="flex flex-col items-center">
-          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-            <UserCheck className="h-5 w-5 text-blue-600" />
+          <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center mb-2">
+            <UserCheck className="h-5 w-5 text-sky-600" />
           </div>
           <span className="text-xs text-gray-700">Verified Users</span>
         </div>

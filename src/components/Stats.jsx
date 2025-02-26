@@ -37,8 +37,8 @@ export default function Stats() {
             key={index}
             className="relative group bg-white p-8 rounded-2xl hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
           >
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-200 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-            <stat.icon className="h-8 w-8 text-blue-600 mb-4" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-200 to-sky-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+            <stat.icon className="h-8 w-8 text-sky-600 mb-4" />
             <span className="text-4xl font-bold text-gray-900">
               {stat.value}
             </span>

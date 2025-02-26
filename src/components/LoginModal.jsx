@@ -80,7 +80,7 @@ const LoginModal = ({ isOpen, onClose }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
               placeholder="you@example.com"
               required
             />
@@ -91,7 +91,7 @@ const LoginModal = ({ isOpen, onClose }) => {
               <label htmlFor="password" className="text-sm font-medium text-gray-700">
                 Password
               </label>
-              <a href="#" className="text-sm text-blue-600 hover:underline">
+              <a href="#" className="text-sm text-sky-600 hover:underline">
                 Forgot password?
               </a>
             </div>
@@ -100,7 +100,7 @@ const LoginModal = ({ isOpen, onClose }) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
               placeholder="••••••••"
               required
             />
@@ -108,7 +108,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
           <button
             type="submit"
-            className="w-full py-3 font-medium text-white transition bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="w-full py-3 font-medium text-white transition bg-sky-600 rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -138,7 +138,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
         <p className="mt-6 text-sm text-center text-gray-600">
           Don't have an account?{' '}
-          <a href="/register" className="font-medium text-blue-600 hover:underline">
+          <a href="/register" className="font-medium text-sky-600 hover:underline">
             Sign up
           </a>
         </p>

@@ -19,7 +19,7 @@ export const Register = ()=>{
             className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6"
             >
             <div className="max-w-xl lg:max-w-3xl">
-                <Link to="/" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition-all duration-300 transform hover:scale-105">
+                <Link to="/" className="flex items-center gap-2 text-sky-600 hover:text-sky-700 transition-all duration-300 transform hover:scale-105">
                     <ArrowLeftRight className="h-8 w-8" />
                     <span className="text-xl font-bold">Swapify</span>
                 </Link>
@@ -121,7 +121,7 @@ export const Register = ()=>{
 
                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                     <button
-                    className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:ring-3 focus:outline-hidden"
+                    className="inline-block shrink-0 rounded-md border border-sky-600 bg-sky-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-sky-600 focus:ring-3 focus:outline-hidden"
                     >
                     Create an account
                     </button>

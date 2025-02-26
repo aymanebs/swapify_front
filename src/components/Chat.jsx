@@ -70,14 +70,14 @@ const Chat = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-white to-blue-50 rounded-xl shadow-xl h-[calc(100vh-12rem)] overflow-hidden border border-blue-100">
+    <div className="bg-gradient-to-b from-white to-sky-50 rounded-xl shadow-xl h-[calc(100vh-12rem)] overflow-hidden border border-sky-100">
       <div className="flex flex-col h-full">
         {/* Chat Header */}
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 backdrop-blur-lg shadow-sm border-b border-blue-200">
+        <div className="p-4 bg-gradient-to-r from-sky-50 to-sky-100 backdrop-blur-lg shadow-sm border-b border-sky-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 shadow-md flex items-center justify-center ring-2 ring-white">
+                <div className="h-12 w-12 rounded-full bg-gradient-to-r from-sky-400 to-sky-600 shadow-md flex items-center justify-center ring-2 ring-white">
                   <span className="text-white font-semibold text-lg">JS</span>
                 </div>
                 <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-green-400 border-2 border-white shadow-md flex items-center justify-center">
@@ -93,13 +93,13 @@ const Chat = () => {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <button className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-full transition-colors">
+              <button className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors">
                 <Phone className="h-5 w-5" />
               </button>
-              <button className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-full transition-colors">
+              <button className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors">
                 <Video className="h-5 w-5" />
               </button>
-              <button className="ml-2 flex items-center justify-center px-3 py-1.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition shadow-md">
+              <button className="ml-2 flex items-center justify-center px-3 py-1.5 bg-sky-600 text-white rounded-full hover:bg-sky-700 transition shadow-md">
                 <Clock className="h-4 w-4 mr-1" />
                 <span className="text-xs font-medium">Schedule Meet</span>
               </button>
@@ -108,9 +108,9 @@ const Chat = () => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-gradient-to-b from-blue-50/30 to-white/60 backdrop-blur-sm">
+        <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-gradient-to-b from-sky-50/30 to-white/60 backdrop-blur-sm">
           <div className="flex justify-center">
-            <div className="px-3 py-1 bg-blue-100 rounded-full text-xs text-blue-800 font-medium">
+            <div className="px-3 py-1 bg-sky-100 rounded-full text-xs text-sky-800 font-medium">
               Today
             </div>
           </div>
@@ -121,14 +121,14 @@ const Chat = () => {
               className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {message.sender === 'other' && (
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-medium text-sm mr-2 mt-2 shadow-sm">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-sky-400 to-sky-600 flex items-center justify-center text-white font-medium text-sm mr-2 mt-2 shadow-sm">
                   JS
                 </div>
               )}
               <div
                 className={`max-w-[70%] ${
                   message.sender === 'user'
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-2xl rounded-bl-2xl shadow-lg'
+                    ? 'bg-gradient-to-r from-sky-600 to-sky-700 text-white rounded-t-2xl rounded-bl-2xl shadow-lg'
                     : 'bg-white border border-gray-200 text-gray-800 rounded-t-2xl rounded-br-2xl shadow-md'
                 } p-4`}
               >
@@ -136,13 +136,13 @@ const Chat = () => {
                 <div className="flex justify-between items-center mt-2">
                   <p
                     className={`text-xs ${
-                      message.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
+                      message.sender === 'user' ? 'text-sky-100' : 'text-gray-500'
                     }`}
                   >
                     {formatTime(message.timestamp)}
                   </p>
                   {message.sender === 'user' && (
-                    <svg className="h-4 w-4 text-blue-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg className="h-4 w-4 text-sky-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   )}
@@ -153,7 +153,7 @@ const Chat = () => {
           
           {isTyping && (
             <div className="flex justify-start">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-medium text-sm mr-2 shadow-sm">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-sky-400 to-sky-600 flex items-center justify-center text-white font-medium text-sm mr-2 shadow-sm">
                 JS
               </div>
               <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-md">
@@ -170,24 +170,24 @@ const Chat = () => {
         </div>
 
         {/* Message Input */}
-        <div className="p-4 bg-white border-t border-blue-100 shadow-inner">
+        <div className="p-4 bg-white border-t border-sky-100 shadow-inner">
           <form onSubmit={handleSend} className="flex items-center space-x-2">
             <div className="flex items-center space-x-2 mr-2">
               <button
                 type="button"
-                className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-full transition-colors"
+                className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors"
               >
                 <Paperclip className="h-5 w-5" />
               </button>
               <button
                 type="button"
-                className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-full transition-colors"
+                className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors"
               >
                 <ImageIcon className="h-5 w-5" />
               </button>
               <button
                 type="button"
-                className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-full transition-colors"
+                className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors"
               >
                 <Smile className="h-5 w-5" />
               </button>
@@ -198,18 +198,18 @@ const Chat = () => {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="w-full rounded-full border-gray-200 bg-gray-50 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 pl-4 pr-12 py-3 shadow-inner"
+                className="w-full rounded-full border-gray-200 bg-gray-50 focus:border-sky-500 focus:ring focus:ring-sky-200 focus:ring-opacity-50 pl-4 pr-12 py-3 shadow-inner"
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-blue-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-sky-600"
               >
                 <Mic className="h-5 w-5" />
               </button>
             </div>
             <button
               type="submit"
-              className="p-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-full hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="p-3 bg-gradient-to-r from-sky-600 to-sky-700 text-white rounded-full hover:from-sky-700 hover:to-sky-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               disabled={!newMessage.trim()}
             >
               <Send className="h-5 w-5" />
@@ -218,7 +218,7 @@ const Chat = () => {
           
           <div className="mt-2 flex justify-center">
             <div className="text-xs text-gray-500 flex items-center">
-              <Shield className="h-3 w-3 text-blue-500 mr-1" />
+              <Shield className="h-3 w-3 text-sky-500 mr-1" />
               Messages are secured with end-to-end encryption
             </div>
           </div>

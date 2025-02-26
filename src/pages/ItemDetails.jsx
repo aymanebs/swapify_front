@@ -48,7 +48,7 @@ const ItemDetails = () => {
                 key={i}
                 onClick={() => setSelectedImage(i)}
                 className={`relative rounded-lg overflow-hidden ${
-                  selectedImage === i ? 'ring-2 ring-blue-500' : 'hover:opacity-80'
+                  selectedImage === i ? 'ring-2 ring-sky-500' : 'hover:opacity-80'
                 } transition duration-200`}
               >
                 <img
@@ -57,7 +57,7 @@ const ItemDetails = () => {
                   className="w-full aspect-square object-cover"
                 />
                 {selectedImage === i && (
-                  <div className="absolute inset-0 bg-blue-500/10" />
+                  <div className="absolute inset-0 bg-sky-500/10" />
                 )}
               </button>
             ))}
@@ -91,9 +91,9 @@ const ItemDetails = () => {
                 <Heart className={`w-6 h-6 ${isLiked ? 'fill-current' : ''}`} />
               </button>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
-              <p className="text-3xl font-bold text-blue-700">Estimated Value: $299</p>
-              <p className="text-blue-600 mt-1">Open to reasonable offers</p>
+            <div className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-xl p-6 border border-sky-100">
+              <p className="text-3xl font-bold text-sky-700">Estimated Value: $299</p>
+              <p className="text-sky-600 mt-1">Open to reasonable offers</p>
             </div>
           </div>
 
@@ -159,7 +159,7 @@ const ItemDetails = () => {
                 Message
               </button> */}
               <button
-               className="w-full py-4 px-6 bg-blue-600 text-emerald-50 font-medium rounded-xl hover:bg-blue-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+               className="w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
                onClick={()=>navigate('/swap')}
                >
                 Propose Swap

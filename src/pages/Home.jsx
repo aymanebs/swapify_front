@@ -24,12 +24,12 @@ const Home =()=>{
       </section>
 
       {/* About Us Section */}
-      <section className="py-16 bg-gradient-to-b from-blue-100 to-blue-50">
+      <section className="py-16 bg-gradient-to-b from-sky-100 to-sky-50">
         <Cta />
       </section>
 
          {/* How it works Section */}
-         <section className=" bg-gradient-to-b from-blue-50 to-white">
+         <section className=" bg-gradient-to-b from-sky-50 to-white">
         <HowItWorks/>
       </section>
 
@@ -39,14 +39,9 @@ const Home =()=>{
       </section>
 
       {/* Testimonials */}
-      <section className="py-12 bg-blue-50">
+      <section className="py-12 bg-sky-50">
         <Testimonials />
       </section>
-
-      {/* Partners */}
-      {/* <section className="py-12 bg-white"> */}
-        {/* <Partners /> */}
-      {/* </section> */}
 
       {/* Newsletter */}
       <section className=" bg-white">

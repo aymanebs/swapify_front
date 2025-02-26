@@ -11,7 +11,7 @@ export default function HowItWorks() {
             <h2 className="text-center text-4xl font-bold text-gray-900 mb-28">HOW IT WORKS</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 bg-blue-400 rounded-full flex items-center justify-center ">
+                <div className="w-24 h-24 bg-sky-400 rounded-full flex items-center justify-center ">
                   <img
                     src={image1}
                     alt="Become a Member"
@@ -24,7 +24,7 @@ export default function HowItWorks() {
                 </p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 bg-blue-400 rounded-full flex items-center justify-center mb-4">
+                <div className="w-24 h-24 bg-sky-400 rounded-full flex items-center justify-center mb-4">
                   <img
                     src={image2}
                     alt="List Your Items"
@@ -37,7 +37,7 @@ export default function HowItWorks() {
                 </p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 bg-blue-400 rounded-full flex items-center justify-center mb-4">
+                <div className="w-24 h-24 bg-sky-400 rounded-full flex items-center justify-center mb-4">
                   <img
                     src={image3}
                     alt="Make Your Swap"
@@ -50,7 +50,7 @@ export default function HowItWorks() {
                 </p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 bg-blue-400 rounded-full flex items-center justify-center mb-4">
+                <div className="w-24 h-24 bg-sky-400 rounded-full flex items-center justify-center mb-4">
                   <img
                     src={image4}
                     alt="Complete the Exchange"

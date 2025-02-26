@@ -47,7 +47,7 @@ export const Banner = () => {
               backgroundAttachment: 'fixed'
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-sky-900/90 to-sky-900/40" />
         </div>
       ))}
 
@@ -57,17 +57,17 @@ export const Banner = () => {
 
           <h1 className="text-5xl font-bold text-white sm:text-6xl">
             Swap your Items  
-            <strong className="block font-extrabold text-blue-300 mt-2">
+            <strong className="block font-extrabold text-sky-300 mt-2">
             Online for free
             </strong>
           </h1>
 
-          <p className="mt-6 text-lg text-blue-100 max-w-lg">
+          <p className="mt-6 text-lg text-sky-100 max-w-lg">
             "Swapify is the easiest way to swap your items"
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-          <Link href="/products" className="inline-flex items-center gap-2 rounded-lg bg-blue-500 px-8 py-4 text-white transition hover:bg-blue-600 hover:scale-105 transform duration-200">
+          <Link to="/items" className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-8 py-4 text-white transition hover:bg-sky-600 hover:scale-105 transform duration-200">
               <span className="text-sm font-medium">Explore Items</span>
               <ArrowRight className="h-5 w-5" />
           </Link>
