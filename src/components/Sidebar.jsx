@@ -7,7 +7,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { icon: Home, label: "Dashboard", href: "/home" },
-    { icon: Users, label: "Users", href: "/events" },
+    { icon: Users, label: "Users", href: "/dashboard/users" },
     { icon: Megaphone, label: "Complaints", href: "/events" },
     
   ];

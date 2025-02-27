@@ -9,6 +9,7 @@ import Swap from "../pages/Swap";
 import Profile from "../pages/Profile";
 import DashLayout from "../components/layouts/DashLayout";
 import HomeDash from "../pages/Dashboard";
+import UsersTable from "../pages/Dashboard/UsersTable";
 
 
 const AppRouter = () =>{
@@ -25,8 +26,9 @@ const AppRouter = () =>{
                 <Route path="contact" element={<Contact/>}/>
                 <Route path="profile" element={<Profile/>}/>            
             </Route>
-            <Route element={<DashLayout/>}>
-                <Route path="/dashboard" element={<HomeDash/>}/>
+            <Route path="/dashboard" element={<DashLayout/>}>
+                <Route path="" element={<HomeDash/>}/>
+                <Route path="users" element={<UsersTable/>}/>
             </Route>
 
         </Routes>
