@@ -10,6 +10,8 @@ import Profile from "../pages/Profile";
 import DashLayout from "../components/layouts/DashLayout";
 import HomeDash from "../pages/Dashboard";
 import UsersTable from "../pages/Dashboard/UsersTable";
+import CategoriesTable from "../pages/Dashboard/CategoriesTable";
+import ItemsTable from "../pages/Dashboard/ItemsTable";
 
 
 const AppRouter = () =>{
@@ -29,6 +31,8 @@ const AppRouter = () =>{
             <Route path="/dashboard" element={<DashLayout/>}>
                 <Route path="" element={<HomeDash/>}/>
                 <Route path="users" element={<UsersTable/>}/>
+                <Route path="categories" element={<CategoriesTable/>}/>
+                <Route path="items" element={<ItemsTable/>} />
             </Route>
 
         </Routes>

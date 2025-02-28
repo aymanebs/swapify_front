@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Search, Plus, Filter, Download, MoreVertical, Edit, Trash, User, Mail, Phone, Shield } from 'lucide-react';
+import { Search, Plus, Filter, Download, MoreVertical, Edit, Trash } from 'lucide-react';
 
-const UsersTable = () => {
+const ItemsTable = () => {
  
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", email: "john.doe@example.com", role: "Admin", status: "Active", dateJoined: "24/05/2023" },
-    { id: 2, name: "Jane Smith", email: "jane.smith@example.com", role: "Editor", status: "Active", dateJoined: "12/08/2023" },
-    { id: 3, name: "Robert Johnson", email: "robert@example.com", role: "Viewer", status: "Inactive", dateJoined: "30/11/2023" },
-    { id: 4, name: "Emily Davis", email: "emily@example.com", role: "Editor", status: "Active", dateJoined: "15/02/2024" },
-    { id: 5, name: "Michael Wilson", email: "michael@example.com", role: "Admin", status: "Active", dateJoined: "08/04/2024" },
+  const [items, setItems] = useState([
+    { id: 1, name: "Prenium Item 1",condition: "Excellant",category:"electronics",dateCreated: "24/05/2023" },    
+    { id: 3, name: "Prenium Item 3",condition: "Excellant",category:"electronics",dateCreated: "24/05/2023" },
+    { id: 4, name: "Prenium Item 4",condition: "Excellant",category:"electronics",dateCreated: "24/05/2023" },
   ]);
 
 
@@ -17,8 +15,8 @@ const UsersTable = () => {
     <div className="p-6 max-w-full bg-gray-50 min-h-screen">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Users</h1>
-        <p className="text-gray-500 mt-1">Manage user accounts and permissions</p>
+        <h1 className="text-2xl font-bold text-gray-900">Items</h1>
+        <p className="text-gray-500 mt-1">Manage users items</p>
       </div>
 
       {/* Action Bar */}
@@ -27,7 +25,7 @@ const UsersTable = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search users..."
+              placeholder="Search items..."
               className="w-full sm:w-64 pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
             />
             <Search
@@ -49,27 +47,27 @@ const UsersTable = () => {
             <Download size={16} />
             <span>Export</span>
           </button>
-          
+        
         </div>
       </div>
 
-      {/* Users Table */}
+      {/* Items Table */}
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
         <div className="overflow-x-auto rounded-t-lg">
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3.5 text-left font-medium text-xs uppercase tracking-wider text-gray-500">
-                  User
+                 Name
                 </th>
                 <th className="px-6 py-3.5 text-left font-medium text-xs uppercase tracking-wider text-gray-500">
-                  Role
+                 Condition
                 </th>
                 <th className="px-6 py-3.5 text-left font-medium text-xs uppercase tracking-wider text-gray-500">
-                  Status
+                 Category
                 </th>
                 <th className="px-6 py-3.5 text-left font-medium text-xs uppercase tracking-wider text-gray-500">
-                  Date Joined
+                  Date inserted
                 </th>
                 <th className="px-6 py-3.5 text-right font-medium text-xs uppercase tracking-wider text-gray-500">
                   Actions
@@ -78,42 +76,31 @@ const UsersTable = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+              {items.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 mr-3">
                         <span className="font-medium text-sm">
-                          {user.name.split(' ').map(name => name[0]).join('')}
+                          {item.name.split(' ').map(name => name[0]).join('')}
                         </span>
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                        <div className="font-medium text-gray-900">{item.name}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                      ${user.role === 'Admin' ? 'bg-purple-100 text-purple-800' : 
-                       user.role === 'Editor' ? 'bg-blue-100 text-blue-800' : 
-                       'bg-gray-100 text-gray-800'}`}
-                    >
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                      ${user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
-                    >
-                      <span className={`w-1.5 h-1.5 rounded-full mr-1.5 
-                        ${user.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`}
-                      ></span>
-                      {user.status}
-                    </span>
-                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {user.dateJoined}
+                    {item.condition}
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {item.category}
+                  </td>
+     
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {item.dateCreated}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-3">
@@ -213,9 +200,8 @@ const UsersTable = () => {
         </div>
       </div>
 
-  
     </div>
   );
 };
 
-export default UsersTable;
+export default ItemsTable;

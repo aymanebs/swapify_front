@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X, Home, Settings, Users, Megaphone, User } from "lucide-react";
+import { Menu, X, Home, Settings, Users, Megaphone, User, Dock, Boxes } from "lucide-react";
 import { Link } from "react-router";
 
 const Sidebar = () => {
@@ -8,6 +8,8 @@ const Sidebar = () => {
   const menuItems = [
     { icon: Home, label: "Dashboard", href: "/home" },
     { icon: Users, label: "Users", href: "/dashboard/users" },
+    { icon: Dock, label: "Categories", href: "/dashboard/categories" },
+    { icon: Boxes, label: "Items", href: "/dashboard/items" },
     { icon: Megaphone, label: "Complaints", href: "/events" },
     
   ];
