@@ -1,8 +1,50 @@
 import { ArrowLeftRight } from "lucide-react"
-import { Link } from "react-router-dom"
+import { useState } from "react"
+import { Link, Navigate, useNavigate } from "react-router-dom"
+import { register } from "../services/authApi";
+import { toast } from "react-toastify";
 
 
 export const Register = ()=>{
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [formData, setFormData] = useState({
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: '',
+        confirm_password: '',
+    });
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        setIsLoading(true);
+        try{
+            const response= await register(formData);
+            if(response.status == 201){
+                toast.success('User registred',{theme: "colored"});
+                navigate('/')
+            }
+        }
+        catch(error){
+            setIsLoading(false);
+            toast.error('Failed to register user',{theme: "colored"});
+            console.error('Failed to register user',error);
+        }
+        finally{
+            setIsLoading(false);
+        }
+        
+    }
+
+    const handleChange = (e)=>{
+        const {name, value} = e.target;
+        setFormData({...formData,[name]: value});
+    }
+
     return(
     <div className="min-h-screen ">
         <section className="bg-white">
@@ -33,13 +75,15 @@ export const Register = ()=>{
                 quibusdam aperiam voluptatum.
                 </p>
 
-                <form action="#" className="mt-8 grid grid-cols-6 gap-6">
+                <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6">
                 <div className="col-span-6 sm:col-span-3">
                     <label htmlFor="FirstName" className="block text-sm font-medium text-gray-700">
                     First Name
                     </label>
 
                     <input
+                    onChange={handleChange}
+                    value={formData.first_name}
                     type="text"
                     id="FirstName"
                     name="first_name"
@@ -53,6 +97,8 @@ export const Register = ()=>{
                     </label>
 
                     <input
+                    value={formData.last_name}
+                    onChange={handleChange}
                     type="text"
                     id="LastName"
                     name="last_name"
@@ -64,6 +110,8 @@ export const Register = ()=>{
                     <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> Email </label>
 
                     <input
+                    value={formData.email}
+                    onChange={handleChange}
                     type="email"
                     id="Email"
                     name="email"
@@ -75,6 +123,8 @@ export const Register = ()=>{
                     <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> Password </label>
 
                     <input
+                    value={formData.password}
+                    onChange={handleChange}
                     type="password"
                     id="Password"
                     name="password"
@@ -88,6 +138,8 @@ export const Register = ()=>{
                     </label>
 
                     <input
+                    value={formData.confirm_password}
+                    onChange={handleChange}
                     type="password"
                     id="PasswordConfirmation"
                     name="password_confirmation"
@@ -95,41 +147,38 @@ export const Register = ()=>{
                     />
                 </div>
 
-                <div className="col-span-6">
-                    <label htmlFor="MarketingAccept" className="flex gap-4">
-                    <input
-                        type="checkbox"
-                        id="MarketingAccept"
-                        name="marketing_accept"
-                        className="size-5 rounded-md border border-gray-200 bg-white shadow-xs"
-                    />
 
-                    <span className="text-sm text-gray-700">
-                        I want to receive emails about events, product updates and company announcements.
-                    </span>
-                    </label>
-                </div>
-
-                <div className="col-span-6">
-                    <p className="text-sm text-gray-500">
-                    By creating an account, you agree to our
-                    <a href="#" className="text-gray-700 underline"> terms and conditions </a>
-                    and
-                    <a href="#" className="text-gray-700 underline">privacy policy</a>.
-                    </p>
-                </div>
 
                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                     <button
                     className="inline-block shrink-0 rounded-md border border-sky-600 bg-sky-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-sky-600 focus:ring-3 focus:outline-hidden"
+                    disabled={isLoading}
                     >
-                    Create an account
+                        {isLoading ? (
+                        <span className="flex items-center justify-center">
+                            <svg className="w-5 h-5 mr-2 animate-spin" viewBox="0 0 24 24">
+                            <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                            ></circle>
+                            <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                            </svg>
+                            Creating...
+                        </span>
+                        ) : (
+                        'Create an account'
+                        )}
+                    
                     </button>
 
-                    <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                    Already have an account?
-                    <a href="#" className="text-gray-700 underline">Log in</a>.
-                    </p>
                 </div>
                 </form>
             </div>

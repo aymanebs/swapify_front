@@ -8,7 +8,7 @@ export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [notifications, setNotifications] = useState(3); 
 
   useEffect(() => {

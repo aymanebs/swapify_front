@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { googleLogin, login } from '../services/authApi';
 
 const LoginModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
@@ -8,16 +9,20 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    const formData = {email,password};
+    login(formData);
     setIsLoading(true);
 
     setTimeout(() => {
       setIsLoading(false);
   
       onClose();
-    }, 1000);
+    }, 10000);
   };
 
   const handleGoogleLogin = () => {
+
+    window.location.href = 'http://localhost:3000/auth/google/login';
    
     console.log('Google login clicked');
   };
