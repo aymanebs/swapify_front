@@ -3,7 +3,7 @@ import axiosClient from "../config/axios"
 
  export const login = async(loginData)=>{
     const response= await axiosClient.post('auth/login',loginData);
-    return response.data;
+    return response.data.acces_token;
 } 
 
 export const googleLogin = async()=>{

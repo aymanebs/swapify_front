@@ -1,23 +1,38 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { googleLogin, login } from '../services/authApi';
+import { login } from '../services/authApi';
+import { useDispatch } from 'react-redux';
+import { setLogin } from '../store/usersSlice';
+import { toast } from 'react-toastify';
 
 const LoginModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleLogin = (e) => {
+  const handleLogin = async(e) => {
     e.preventDefault();
-    const formData = {email,password};
-    login(formData);
     setIsLoading(true);
-
-    setTimeout(() => {
+    try{
+      const formData = {email,password};
+      const access_token = await login(formData);
+      if(access_token){
+        dispatch(setLogin(access_token));
+        onClose();
+        toast.success('Logged in',{theme: "colored"});
+      }
+    
+    }
+    catch(error){
+      console.error('failed to login: ',error);
+      toast.error('Failed to log',{theme: "colored"});
+    }
+    finally{
       setIsLoading(false);
-  
-      onClose();
-    }, 10000);
+    }
+
+   
   };
 
   const handleGoogleLogin = () => {
