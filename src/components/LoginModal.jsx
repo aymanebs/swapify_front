@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { login } from '../services/authApi';
+import { googleLogin, login } from '../services/authApi';
 import { useDispatch } from 'react-redux';
 import { setLogin } from '../store/usersSlice';
 import { toast } from 'react-toastify';
@@ -35,7 +35,7 @@ const LoginModal = ({ isOpen, onClose }) => {
    
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
 
     window.location.href = 'http://localhost:3000/auth/google/login';
    

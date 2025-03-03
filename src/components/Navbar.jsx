@@ -12,7 +12,11 @@ export const Navbar = () => {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [notifications, setNotifications] = useState(3); 
   const isLoggedIn = useSelector((state)=> state.users.isLoggedIn);
+  const user = useSelector((state)=>state.users.loggedUser);
+  console.log('user',user);
   const dispatch = useDispatch();
+
+
 
   console.log("isLoggedIn", isLoggedIn);
 
@@ -97,7 +101,7 @@ export const Navbar = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Sarah</span>
+                    <span className="text-sm font-medium text-gray-700">{user?.first_name}</span>
                     <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-300 ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
                   
@@ -105,8 +109,8 @@ export const Navbar = () => {
                   {isUserDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100 overflow-hidden transition-all duration-300 animate-fadeIn">
                       <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-sky-50 to-white">
-                        <p className="text-sm font-semibold text-gray-800">Sarah Johnson</p>
-                        <p className="text-xs text-gray-500 mt-0.5">sarah.j@example.com</p>
+                        <p className="text-sm font-semibold text-gray-800">{user?.first_name + ' ' + user?.last_name}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{user?.email}</p>
                       </div>
                       <ul className="py-1">
                         <li>
