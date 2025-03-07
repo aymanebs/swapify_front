@@ -13,12 +13,11 @@ export const Navbar = () => {
   const [notifications, setNotifications] = useState(3); 
   const isLoggedIn = useSelector((state)=> state.users.isLoggedIn);
   const user = useSelector((state)=>state.users.loggedUser);
-  console.log('user',user);
   const dispatch = useDispatch();
 
 
 
-  console.log("isLoggedIn", isLoggedIn);
+ 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -96,7 +95,7 @@ export const Navbar = () => {
                   >
                     <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-sky-300 flex-shrink-0 ring-2 ring-sky-100">
                       <img 
-                        src="https://loremflickr.com/1280/720" 
+                        src={`${user.avatar}`}
                         alt="User profile"
                         className="w-full h-full object-cover"
                       />

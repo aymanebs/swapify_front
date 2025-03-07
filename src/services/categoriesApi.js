@@ -12,8 +12,8 @@ export const createcategory =async (categoryData)=>{
 
 export const getAllcategories = async ()=>{
     try{
-        const data = await axiosClient.get('/categories').data;
-        return data;
+        const response = await axiosClient.get('/categories');
+        return response.data;
     }
     catch(error){
         console.error('Failed to fetch categories', error);
@@ -22,7 +22,8 @@ export const getAllcategories = async ()=>{
 
 export const getOnecategory = async (categoryId)=>{
     try{
-        const data = await axiosClient.get(`/categories/${categoryId}`);
+        const response = await axiosClient.get(`/categories/${categoryId}`);
+        return response.data;
     }
     catch(error){
         console.error('Failed to get the category', error);

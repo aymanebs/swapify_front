@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { getAllcategories } from '../services/categoriesApi';
-import { conditions } from '../constants/condition';
 
 
-const CreateItemForm = ({onSubmit, onCancel }) => {
+
+const EditItemForm = ({ item, onSubmit, onCancel }) => {
 
 
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    condition: '',
-    category: '',
+    name: item.name,
+    description: item.description,
+    condition: item.condition,
+    category: item.category._id,
   });
   
   const [errors, setErrors] = useState({});
   
-
+console.log('formData : ',formData);
   useEffect(()=>{
     async function fetchCategories() {
 
@@ -35,14 +35,6 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
 
     
   },[]);
-
-
-
-
-
-
-
-
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,8 +42,10 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
       ...formData,
       [name]: value
     });
+
+    console.log('name: ',value);
     
-    // Clear error when field is edited
+   
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -81,7 +75,7 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
       newErrors.condition = 'Condition is required';
     }
     
-    // if (!formData.categoryId) {
+    // if (!formData.category._id) {
     //   newErrors.categoryId = 'Category is required';
     // }
     
@@ -90,18 +84,17 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
   };
   
   const handleSubmit = (e) => {
-    e.preventDefault();
-
-    
+    e.preventDefault();    
     if (validateForm()) {
-      onSubmit(formData);
+      const itemId = item._id;
+      onSubmit(itemId,formData);
     }
   };
   
   return (
     <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">Add New Item</h3>
+        <h3 className="text-lg font-semibold text-gray-800">Edit your Item</h3>
         <button 
           onClick={onCancel}
           className="text-gray-500 hover:text-gray-700"
@@ -155,12 +148,11 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
               onChange={handleChange}
               className={`w-full px-3 text-gray-800 py-2 border ${errors.condition ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-1 focus:ring-sky-500`}
             >
-              <option value="" disabled>All conditions</option>
-
-              {
-                conditions.map((condition)=><option key={condition} value={condition}>{condition}</option>)
-              }
-
+              <option value="Like New">Like New</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Poor">Poor</option>
             </select>
             {errors.condition && <p className="mt-1 text-sm text-red-500">{errors.condition}</p>}
           </div>
@@ -176,7 +168,9 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
               onChange={handleChange}
               className={`w-full px-3 py-2 text-gray-800 border rounded-md focus:outline-none focus:ring-1 focus:ring-sky-500`}
             >
-               <option value="" disabled>All categories</option>
+
+                <option value="" disabled>All categories</option>
+
                 {
                     categories.length > 0 ?(
 
@@ -184,7 +178,7 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
                             return <option key={category._id} value={category._id}>{category.name}</option>;
                           })
                     ):
-                    <option disabled>Waiting for categories...</option>
+                    <option>Waiting for categories...</option>
 
               
                 }
@@ -208,7 +202,7 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
                 type="submit"
                 className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
               >
-                Create Item
+                Update Item
               </button>
             </div>
           </div>
@@ -218,4 +212,4 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
   );
 };
 
-export default CreateItemForm;
+export default EditItemForm;

@@ -8,7 +8,6 @@ import axiosClient from "../config/axios"
 
 export const googleLogin = async()=>{
     const response = await axiosClient.get('auth/google/login');
-    console.log('response', response)
     return response;
 }
 

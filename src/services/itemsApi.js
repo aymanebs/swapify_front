@@ -10,10 +10,20 @@ export const createItem =async (itemsData)=>{
     }
 }
 
+export const getAllUserItems = async()=>{
+    try{
+        const response = await axiosClient.get('/items/me');
+        return response.data;
+    }
+    catch(error){
+        console.error('Failed to fetch items', error);
+    }
+}
+
 export const getAllItems = async ()=>{
     try{
-        const data = await axiosClient.get('/items').data;
-        return data;
+        const response = await axiosClient.get('/items');
+        return response.data;
     }
     catch(error){
         console.error('Failed to fetch items', error);
@@ -22,7 +32,8 @@ export const getAllItems = async ()=>{
 
 export const getOneItem = async (itemId)=>{
     try{
-        const data = await axiosClient.get(`/items/${itemId}`);
+        const response = await axiosClient.get(`/items/${itemId}`);
+        return response.data;
     }
     catch(error){
         console.error('Failed to get the item', error);
@@ -31,6 +42,7 @@ export const getOneItem = async (itemId)=>{
 
 export const updateItem = async (itemId,itemsData) => {
     try{
+        console.log('éééééééé itemId', itemId);
         await axiosClient.put(`/items/${itemId}`, itemsData);
     }
     catch(error){
