@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Upload, Image as ImageIcon, Trash2 } from 'lucide-react';
 import { getAllcategories } from '../services/categoriesApi';
 import { conditions } from '../constants/condition';
 
@@ -13,9 +13,11 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
     description: '',
     condition: '',
     category: '',
+    photos: [],
   });
   
   const [errors, setErrors] = useState({});
+  const [previewImages, setPreviewImages] = useState([]);
   
 
   useEffect(()=>{
@@ -36,14 +38,6 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
     
   },[]);
 
-
-
-
-
-
-
-
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -97,6 +91,58 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
       onSubmit(formData);
     }
   };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    
+    // Update form data with new files
+    setFormData({
+      ...formData,
+      photos: [...formData.photos, ...files]
+    });
+    
+    // Create preview URLs for the images
+    const newPreviewImages = files.map(file => ({
+      file,
+      url: URL.createObjectURL(file)
+    }));
+    
+    setPreviewImages([...previewImages, ...newPreviewImages]);
+    
+    // Clear any previous errors
+    if (errors.photos) {
+      setErrors({
+        ...errors,
+        photos: ''
+      });
+    }
+  };
+
+  const removeImage = (index) => {
+    // Create new arrays without the removed image
+    const updatedPhotos = [...formData.photos];
+    updatedPhotos.splice(index, 1);
+    
+    const updatedPreviews = [...previewImages];
+    // Revoke the object URL to avoid memory leaks
+    URL.revokeObjectURL(updatedPreviews[index].url);
+    updatedPreviews.splice(index, 1);
+    
+    // Update state
+    setFormData({
+      ...formData,
+      photos: updatedPhotos
+    });
+    setPreviewImages(updatedPreviews);
+  };
+  
+
+   // Clean up object URLs when component unmounts
+   useEffect(() => {
+    return () => {
+      previewImages.forEach(image => URL.revokeObjectURL(image.url));
+    };
+  }, []);
   
   return (
     <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
@@ -110,7 +156,7 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
         </button>
       </div>
       
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -190,6 +236,63 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
                 }
             </select>
             {/* {errors.categoryId && <p className="mt-1 text-sm text-red-500">{errors.categoryId}</p>} */}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Photos <span className="text-red-500">*</span>
+            </label>
+            
+            <div className={`border-2 border-dashed ${errors.photos ? 'border-red-500' : 'border-gray-300'} rounded-md p-4`}>
+              <div className="flex flex-col items-center">
+                <ImageIcon className="h-8 w-8 text-gray-400 mb-2" />
+                <p className="text-sm text-gray-500 mb-2">Drag and drop photos or click to browse</p>
+                <p className="text-xs text-gray-500 mb-4">Recommended: JPG, PNG (Max 5MB each)</p>
+                
+                <input 
+                  type="file" 
+                  id="photos" 
+                  name="photos" 
+                  accept="image/*" 
+                  multiple
+                  onChange={handleFileChange} 
+                  className="hidden"
+                />
+                <label 
+                  htmlFor="photos" 
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 cursor-pointer flex items-center"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  <span>Upload Photos</span>
+                </label>
+              </div>
+              
+              {errors.photos && <p className="mt-3 text-sm text-red-500">{errors.photos}</p>}
+              
+              {/* Preview Images */}
+              {previewImages.length > 0 && (
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  {previewImages.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <div className="aspect-square overflow-hidden rounded-md border border-gray-200">
+                        <img 
+                          src={image.url} 
+                          alt={`Preview ${index + 1}`} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           
           <div className="pt-4">
