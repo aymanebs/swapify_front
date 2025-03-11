@@ -173,7 +173,7 @@ const ItemDetails = () => {
               </button> */}
               <button
                className="w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
-               onClick={()=>navigate('/swap')}
+               onClick={()=>navigate(`/swap/${itemId}`)}
                >
                 Propose Swap
               </button>
