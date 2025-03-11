@@ -1,9 +1,8 @@
-import { Star, Shield, Clock, MessageCircle, Package, ThumbsUp, Award, AlertCircle, Calendar, RefreshCw } from 'lucide-react';
+import { Star, Shield, Clock, MessageCircle, Package, ThumbsUp, Award, AlertCircle, Calendar, RefreshCw, UserCircle } from 'lucide-react';
 
 
-export default function UserProfile(){
-
-    const user ={};
+export default function UserProfile({user, onEditProfile}){
+  
     return (
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="bg-sky-600 px-6 py-4">
@@ -13,7 +12,7 @@ export default function UserProfile(){
         <div className="p-6">
           <div className="flex flex-col items-center mb-6">
             <img 
-              src={user?.profileImage} 
+              src={user?.avatar} 
               alt={user?.name} 
               className="w-24 h-24 rounded-full object-cover border-4 border-sky-100"
             />
@@ -23,10 +22,10 @@ export default function UserProfile(){
           
           <div className="space-y-4">
             <div className="flex items-center text-gray-700">
-              <Calendar className="h-5 w-5 mr-3 text-sky-600" />
+              <UserCircle className="h-5 w-5 mr-3 text-sky-600" />
               <div>
-                <p className="text-sm text-gray-500">Member Since</p>
-                <p className="font-medium">{user?.joinedDate}</p>
+                <p className="text-sm text-gray-500">Welcome</p>
+                <p className="font-medium">{user?.first_name + ' '+user?.last_name} </p>
               </div>
             </div>
             
@@ -48,7 +47,9 @@ export default function UserProfile(){
           </div>
           
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <button className="w-full bg-sky-600 text-white py-2 rounded-md hover:bg-sky-700 transition">
+            <button
+            onClick={onEditProfile}
+            className="w-full bg-sky-600 text-white py-2 rounded-md hover:bg-sky-700 transition">
               Edit Profile
             </button>
           </div>

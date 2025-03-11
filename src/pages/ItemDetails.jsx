@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MessageCircle, Share2, Flag, Heart, UserCircle2, Star, MapPin, Calendar, Package } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getOneItem } from '../services/itemsApi';
+import { useSelector } from 'react-redux';
+import { daysPassed } from '../helpers/daysPassed';
 
 const ItemDetails = () => {
   
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
+    const {itemId} = useParams();
+    const [item, setItem] = useState(''); 
     let navigate = useNavigate();
+    const user = useSelector((state)=> state.users.loggedUser);
   
     const images = [
       'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
@@ -15,6 +21,19 @@ const ItemDetails = () => {
       'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848',
       'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f'
     ];
+
+    useEffect(()=>{
+      async function fetchItem(){
+        try{
+          const data = await getOneItem(itemId);
+          setItem(data);
+        }
+        catch(error){
+          console.error('Failed to fetch the item: ', error)
+        }
+      }
+      fetchItem();
+    },[itemId]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4">
@@ -68,7 +87,7 @@ const ItemDetails = () => {
           <div className="space-y-4">
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">Vintage Camera</h1>
+                <h1 className="text-4xl font-bold text-gray-900 mb-2">{item.name}</h1>
                 <div className="flex items-center space-x-4 text-gray-600">
                   <div className="flex items-center">
                     <MapPin className="w-4 h-4 mr-1" />
@@ -76,7 +95,7 @@ const ItemDetails = () => {
                   </div>
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-1" />
-                    <span className="text-sm">Listed 2 days ago</span>
+                    <span className="text-sm">Listed {daysPassed(item.createdAt)} days ago</span>
                   </div>
                 </div>
               </div>
@@ -91,19 +110,14 @@ const ItemDetails = () => {
                 <Heart className={`w-6 h-6 ${isLiked ? 'fill-current' : ''}`} />
               </button>
             </div>
-            <div className="bg-gradient-to-br from-sky-50 to-sky-50 rounded-xl p-6 border border-sky-100">
-              <p className="text-3xl font-bold text-sky-700">Estimated Value: $299</p>
-              <p className="text-sky-600 mt-1">Open to reasonable offers</p>
-            </div>
+
           </div>
 
           <div className="space-y-6 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">Description</h2>
               <p className="text-gray-600 leading-relaxed">
-                Professional vintage camera in excellent condition. Perfect for photography enthusiasts
-                and collectors. Comes with original leather case and manual. Looking to swap for
-                professional audio equipment or similar value items.
+                {item.description}
               </p>
             </div>
 
@@ -116,7 +130,7 @@ const ItemDetails = () => {
                   </div>
                   <div>
                     <p className="text-gray-500 text-sm">Condition</p>
-                    <p className="font-medium text-gray-900">Excellent</p>
+                    <p className="font-medium text-gray-900">{item.condition}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -125,7 +139,7 @@ const ItemDetails = () => {
                   </div>
                   <div>
                     <p className="text-gray-500 text-sm">Category</p>
-                    <p className="font-medium text-gray-900">Electronics</p>
+                    <p className="font-medium text-gray-900">{item?.category?.name}</p>
                   </div>
                 </div>
               </div>
@@ -140,14 +154,13 @@ const ItemDetails = () => {
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg text-gray-900">John Smith</h3>
+                  <h3 className="font-semibold text-lg text-gray-900">{user.first_name + ' ' + user.last_name }</h3>
                   <div className="flex items-center space-x-2">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                       ))}
                     </div>
-                    <p className="text-gray-500 text-sm">Member since 2023</p>
                   </div>
                 </div>
               </div>

@@ -1,113 +1,189 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Sliders, Package, Star, Heart, ChevronDown, X, ArrowRight, Sparkles, TrendingUp, Users, Gift, ShoppingBag, Clock, MapPin, Zap, Shield, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-export const Items = ()=> {
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [condition, setCondition] = useState('all');
-  const [showFilters, setShowFilters] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 8;
+import React, {useState, useEffect} from 'react';
+import {
+  Search,
+  Sliders,
+  Package,
+  Star,
+  Heart,
+  ChevronDown,
+  X,
+  ArrowRight,
+  Sparkles,
+  TrendingUp,
+  Users,
+  Gift,
+  ShoppingBag,
+  Clock,
+  MapPin,
+  Zap,
+  Shield,
+  Trophy,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
+import {useNavigate} from 'react-router-dom';
+import {getAllItems} from '../services/itemsApi';
+import {getAllcategories} from '../services/categoriesApi';
+import { conditions } from '../constants/condition';
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 0);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+export const Items = () => {
+  const [categories, setCategories] = useState ([]);
+  const [selectedCategories, setSelectedCategories] = useState ([]);
+  const [priceRange, setPriceRange] = useState ([0, 1000]);
+  const [showFilters, setShowFilters] = useState (false);
+  const [scrolled, setScrolled] = useState (false);
+  const [currentPage, setCurrentPage] = useState (1);
+  const totalPages = 8;
+  const [items, setItems] = useState ([]);
+  const [filtredItems, setFiltredItems] = useState ([]);
+
+  useEffect (() => {
+    async function fetchItems () {
+      try {
+        const items = await getAllItems ();
+        setItems (items);
+        setFiltredItems (items);
+      } catch (error) {
+        console.error ('Failed to fetch items', error);
+      }
+    }
+    fetchItems ();
   }, []);
 
-  const navigate = useNavigate();
+
+
+  useEffect (() => {
+    const handleScroll = () => {
+      setScrolled (window.scrollY > 0);
+    };
+    window.addEventListener ('scroll', handleScroll);
+    return () => window.removeEventListener ('scroll', handleScroll);
+  }, []);
+
+  useEffect (() => {
+    async function fetchCategories () {
+      try {
+        const data = await getAllcategories ();
+        setCategories (data);
+      } catch (error) {
+        console.error ('Failed to fetch categories', error);
+      }
+    }
+
+    fetchCategories ();
+  }, []);
+
+  const navigate = useNavigate ();
 
   const stats = [
-    { icon: Users, label: 'Active Traders', value: '50K+' },
-    { icon: Gift, label: 'Items Traded', value: '100K+' },
-    { icon: TrendingUp, label: 'Monthly Trades', value: '15K+' },
-  ];
-
-  const categories = [
-    { name: 'Electronics', count: 245, image: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=500' },
-    { name: 'Furniture', count: 189, image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=500' },
-    { name: 'Books', count: 320, image: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=500' },
-    { name: 'Sports', count: 156, image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=500' },
-    { name: 'Fashion', count: 278, image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=500' },
+    {icon: Users, label: 'Active Traders', value: '50K+'},
+    {icon: Gift, label: 'Items Traded', value: '100K+'},
+    {icon: TrendingUp, label: 'Monthly Trades', value: '15K+'},
   ];
 
   const featuredCollections = [
-    { title: 'New Arrivals', icon: ShoppingBag, count: 156 },
-    { title: 'Ending Soon', icon: Clock, count: 89 },
-    { title: 'Near You', icon: MapPin, count: 234 },
+    {title: 'New Arrivals', icon: ShoppingBag, count: 156},
+    {title: 'Ending Soon', icon: Clock, count: 89},
+    {title: 'Near You', icon: MapPin, count: 234},
   ];
 
-  const toggleCategory = (category) => {
-    setSelectedCategories(prev => 
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
+  const handleFilter = (category,condition, query) => {
+    setSelectedCategories (prev => {
+      const updatedCategories = prev.includes (category)
+        ? prev.filter (c => c !== category)
+        : [...prev, category];
+
+      if(updatedCategories.length > 0){
+      setFiltredItems (
+        items.filter(item => updatedCategories.includes (item.category.name))
+      );
+      }
+
+      if(condition){
+        setFiltredItems(items.filter(item => item.condition == condition));
+      }
+
+      if(query){
+        setFiltredItems(items.filter((item)=>item.name.toLowerCase().includes(query.toLowerCase())));
+      }
+
+      else{
+        setFiltredItems(items);
+      }
+
+      return updatedCategories;
+    });
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    window.scrollTo({
-      top: document.getElementById("productsSection").offsetTop - 100,
-      behavior: "smooth"
+
+
+  const handlePageChange = page => {
+    setCurrentPage (page);
+    window.scrollTo ({
+      top: document.getElementById ('productsSection').offsetTop - 100,
+      behavior: 'smooth',
     });
   };
 
   const renderPaginationItems = () => {
     const items = [];
     const showEllipsis = totalPages > 7;
-    
+
     if (showEllipsis) {
       // Always show first page
-      items.push(
-        <button 
-          key={1} 
-          onClick={() => handlePageChange(1)}
+      items.push (
+        <button
+          key={1}
+          onClick={() => handlePageChange (1)}
           className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === 1 ? 'bg-sky-600 text-white' : 'text-sky-600 hover:bg-sky-50'}`}
         >
           1
         </button>
       );
-      
+
       if (currentPage > 3) {
-        items.push(
-          <span key="ellipsis1" className="h-10 w-10 flex items-center justify-center">
+        items.push (
+          <span
+            key="ellipsis1"
+            className="h-10 w-10 flex items-center justify-center"
+          >
             ...
           </span>
         );
       }
-      
-  
-      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+
+      for (
+        let i = Math.max (2, currentPage - 1);
+        i <= Math.min (totalPages - 1, currentPage + 1);
+        i++
+      ) {
         if (i === 1 || i === totalPages) continue; // Skip first and last pages as they're always shown
-        items.push(
-          <button 
-            key={i} 
-            onClick={() => handlePageChange(i)}
+        items.push (
+          <button
+            key={i}
+            onClick={() => handlePageChange (i)}
             className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === i ? 'bg-sky-600 text-white' : 'text-sky-600 hover:bg-sky-50'}`}
           >
             {i}
           </button>
         );
       }
-      
 
       if (currentPage < totalPages - 2) {
-        items.push(
-          <span key="ellipsis2" className="h-10 w-10 flex items-center justify-center">
+        items.push (
+          <span
+            key="ellipsis2"
+            className="h-10 w-10 flex items-center justify-center"
+          >
             ...
           </span>
         );
       }
-      
-  
-      items.push(
-        <button 
-          key={totalPages} 
-          onClick={() => handlePageChange(totalPages)}
+
+      items.push (
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange (totalPages)}
           className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === totalPages ? 'bg-sky-600 text-white' : 'text-sky-600 hover:bg-sky-50'}`}
         >
           {totalPages}
@@ -115,10 +191,10 @@ export const Items = ()=> {
       );
     } else {
       for (let i = 1; i <= totalPages; i++) {
-        items.push(
-          <button 
-            key={i} 
-            onClick={() => handlePageChange(i)}
+        items.push (
+          <button
+            key={i}
+            onClick={() => handlePageChange (i)}
             className={`h-10 w-10 flex items-center justify-center rounded-lg transition-colors ${currentPage === i ? 'bg-sky-600 text-white' : 'text-sky-600 hover:bg-sky-50'}`}
           >
             {i}
@@ -126,7 +202,7 @@ export const Items = ()=> {
         );
       }
     }
-    
+
     return items;
   };
 
@@ -165,10 +241,12 @@ export const Items = ()=> {
               </button>
             </div>
             <div className="grid grid-cols-3 gap-8">
-              {stats.map(({ icon: Icon, label, value }) => (
+              {stats.map (({icon: Icon, label, value}) => (
                 <div key={label} className="text-center group">
                   <Icon className="w-6 h-6 text-sky-200 mx-auto mb-2 transform transition-transform group-hover:scale-110 duration-300" />
-                  <div className="text-2xl font-bold text-white mb-1">{value}</div>
+                  <div className="text-2xl font-bold text-white mb-1">
+                    {value}
+                  </div>
                   <div className="text-sky-200 text-sm">{label}</div>
                 </div>
               ))}
@@ -177,24 +255,20 @@ export const Items = ()=> {
         </div>
       </div>
 
-      <div className={`bg-white sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
+      <div
+        className={`bg-white sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-4">
             <div className="flex-1 relative group">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sky-500 w-5 h-5 transition-colors group-focus-within:text-sky-600" />
               <input
+                onChange={(e)=>handleFilter('','',e.target.value)}
                 type="text"
                 placeholder="Search items..."
                 className="w-full pl-10 pr-4 py-3 rounded-xl border  bg-white-50 border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent placeholder-sky-300 text-sky-600 transition-all"
               />
             </div>
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-3 bg-sky-50 text-sky-600 rounded-xl hover:bg-sky-100 transition-all duration-300"
-            >
-              <Sliders className="w-5 h-5" />
-              <span className="hidden sm:inline">Filters</span>
-            </button>
           </div>
         </div>
       </div>
@@ -202,8 +276,11 @@ export const Items = ()=> {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <div className="mb-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {featuredCollections.map(({ title, icon: Icon, count }) => (
-              <div key={title} className="group bg-gradient-to-br from-sky-600 to-sky-300 rounded-xl p-6 text-white hover:scale-[1.02] transition-all duration-300 cursor-pointer relative overflow-hidden">
+            {featuredCollections.map (({title, icon: Icon, count}) => (
+              <div
+                key={title}
+                className="group bg-gradient-to-br from-sky-600 to-sky-300 rounded-xl p-6 text-white hover:scale-[1.02] transition-all duration-300 cursor-pointer relative overflow-hidden"
+              >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 <Icon className="w-8 h-8 mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-xl font-semibold mb-2">{title}</h3>
@@ -215,27 +292,28 @@ export const Items = ()=> {
 
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Popular Categories</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Popular Categories
+            </h2>
             <button className="flex items-center gap-2 text-sky-600 hover:text-sky-700 group">
-              View All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              View All
+              {' '}
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {categories.map(category => (
+            {categories.map (category => (
               <button
                 key={category.name}
-                onClick={() => toggleCategory(category.name)}
+                onClick={() => handleFilter(category.name, '')}
                 className="relative group overflow-hidden rounded-xl aspect-square"
               >
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
                 <div className="absolute inset-0 bg-gradient-to-t from-sky-900/90 to-sky-900/20 group-hover:from-sky-800/90 transition-colors duration-300" />
                 <div className="absolute inset-0 p-4 flex flex-col justify-end transform transition-transform duration-300 group-hover:translate-y-[-8px]">
-                  <h3 className="text-white font-semibold text-lg mb-1">{category.name}</h3>
-                  <p className="text-sky-200 text-sm">{category.count} items</p>
+                  <h3 className="text-white font-semibold text-lg mb-1">
+                    {category.name}
+                  </h3>
+
                 </div>
               </button>
             ))}
@@ -243,50 +321,33 @@ export const Items = ()=> {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8" id="productsSection">
-          <div className={`lg:w-72 space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+          <div
+            className={`lg:w-72 space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}
+          >
             <div className="bg-white rounded-xl p-6 shadow-sm border border-sky-100">
-              <h3 className="font-semibold text-gray-900 mb-4">All Categories</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">
+                All Categories
+              </h3>
               <div className="space-y-3">
-                {categories.map(category => (
-                  <label key={category.name} className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-sky-50 cursor-pointer group transition-colors duration-200">
+                {categories.map (category => (
+                  <label
+                    key={category.name}
+                    className="flex items-center justify-between p-2 rounded-lg bg-white hover:bg-sky-50 cursor-pointer group transition-colors duration-200"
+                  >
                     <div className="flex items-center gap-3">
                       <input
+                        key={category._id}
                         type="checkbox"
-                        checked={selectedCategories.includes(category.name)}
-                        onChange={() => toggleCategory(category.name)}
+                        checked={selectedCategories.includes (category.name)}
+                        onChange={() => handleFilter(category.name)}
                         className="w-4 h-4 rounded border border-sky-500 bg-white appearance-none checked:bg-sky-200 checked:border-transparent checked:ring-2 checked:ring-sky-500 focus:ring-2 focus:ring-sky-500 transition"
                       />
-                      <span className="text-sky-900 group-hover:text-sky-700 transition-colors">{category.name}</span>
+                      <span className="text-sky-900 group-hover:text-sky-700 transition-colors">
+                        {category.name}
+                      </span>
                     </div>
-                    <span className="text-sm text-sky-400">{category.count}</span>
                   </label>
                 ))}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-sky-100">
-              <h3 className="font-semibold text-gray-900 mb-4">Price Range</h3>
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="text-sm text-sky-600 mb-1.5 block">Min Price</label>
-                    <input
-                      type="number"
-                      value={priceRange[0]}
-                      onChange={e => setPriceRange([Number(e.target.value), priceRange[1]])}
-                      className="w-full px-4 py-2.5 border  bg-white-50 border-sky-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-600 placeholder-sky-300 transition-all"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <label className="text-sm  text-sky-600 mb-1.5 block">Max Price</label>
-                    <input
-                      type="number"
-                      value={priceRange[1]}
-                      onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
-                      className="w-full px-4 py-2.5 border  bg-white-50 border-sky-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-600 placeholder-sky-300 transition-all"
-                    />
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -294,15 +355,14 @@ export const Items = ()=> {
             <div className="bg-white rounded-xl p-6 shadow-sm border border-sky-100">
               <h3 className="font-semibold text-gray-900 mb-4">Condition</h3>
               <select
-                value={condition}
-                onChange={e => setCondition(e.target.value)}
+                onChange={(e)=>handleFilter('', e.target.value)}
                 className="w-full px-4 py-2.5 border bg-white-50 border-sky-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 text-sky-600 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%223B82F6%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22m6 8 4 4 4-4%22/%3E%3C/svg%3E')] bg-[length:1.25rem_1.25rem] bg-no-repeat bg-[right_0.5rem_center] transition-all"
               >
-                <option value="all">All Conditions</option>
-                <option value="like new">Like New</option>
-                <option value="excellent">Excellent</option>
-                <option value="good">Good</option>
-                <option value="fair">Fair</option>
+                <option value={false} disabled>All conditions</option>
+              {
+              conditions.map((condition)=><option value={condition} key={condition} >{condition}</option>
+              )}
+                
               </select>
             </div>
           </div>
@@ -310,8 +370,11 @@ export const Items = ()=> {
           {/* Items Grid */}
           <div className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(item => (
-                <div key={item} className="group bg-white rounded-xl shadow-sm overflow-hidden border border-sky-100 hover:shadow-lg transition-all duration-300">
+              {filtredItems.map (item => (
+                <div
+                  key={item._id}
+                  className="group bg-white rounded-xl shadow-sm overflow-hidden border border-sky-100 hover:shadow-lg transition-all duration-300"
+                >
                   <div className="relative">
                     <img
                       src={`https://images.unsplash.com/photo-${1550000000000 + item}?auto=format&fit=crop&w=500&q=60`}
@@ -324,26 +387,30 @@ export const Items = ()=> {
                     <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-lg transform transition-transform duration-300 group-hover:translate-y-[-4px]">
                       <div className="flex items-center space-x-1">
                         <Sparkles className="w-4 h-4 text-sky-500" />
-                        <span className="text-sm font-medium text-sky-900">Premium</span>
+                        <span className="text-sm font-medium text-sky-900">
+                          Premium
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div className="p-5">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-sky-600 transition-colors">Premium Item {item}</h3>
-                      <span className="text-sky-600 font-semibold">$299</span>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-sky-600 transition-colors">
+                        {item.name}
+                      </h3>
                     </div>
                     <div className="flex items-center text-sm text-sky-500 mb-4">
                       <Package className="w-4 h-4 mr-1.5" />
-                      <span>Like New</span>
+                      <span>{item.condition}</span>
                       <span className="mx-2">•</span>
-                      <span>Electronics</span>
+                      <span>{item.category.name}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-sky-400">New York, NY</span>
                       <button
-                       onClick={()=> navigate('/itemDetails')}
-                       className="px-4 py-2 bg-sky-50 text-sky-600 rounded-lg text-sm font-medium hover:bg-sky-100 transition-colors group-hover:bg-sky-600 group-hover:text-white">
+                        onClick={() => navigate (`/itemDetails/${item._id}`)}
+                        className="px-4 py-2 bg-sky-50 text-sky-600 rounded-lg text-sm font-medium hover:bg-sky-100 transition-colors group-hover:bg-sky-600 group-hover:text-white"
+                      >
                         View Details
                       </button>
                     </div>
@@ -351,39 +418,58 @@ export const Items = ()=> {
                 </div>
               ))}
             </div>
-            
+
             {/* Pagination */}
             <div className="mt-12 flex flex-col items-center">
               <div className="flex items-center justify-center space-x-2">
-                <button 
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                <button
+                  onClick={() =>
+                    handlePageChange (Math.max (1, currentPage - 1))}
                   disabled={currentPage === 1}
                   className="h-10 w-10 flex items-center justify-center rounded-lg text-sky-600 hover:bg-sky-50 disabled:opacity-50 disabled:pointer-events-none transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                
+
                 <div className="flex space-x-2">
-                  {renderPaginationItems()}
+                  {renderPaginationItems ()}
                 </div>
-                
-                <button 
-                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+
+                <button
+                  onClick={() =>
+                    handlePageChange (Math.min (totalPages, currentPage + 1))}
                   disabled={currentPage === totalPages}
                   className="h-10 w-10 flex items-center justify-center rounded-lg text-sky-600 hover:bg-sky-50 disabled:opacity-50 disabled:pointer-events-none transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </div>
-              
+
               <p className="mt-4 text-sm text-sky-600">
-                Showing page {currentPage} of {totalPages} ({(currentPage - 1) * 12 + 1}-{Math.min(currentPage * 12, totalPages * 12)} of {totalPages * 12} items)
+                Showing page
+                {' '}
+                {currentPage}
+                {' '}
+                of
+                {' '}
+                {totalPages}
+                {' '}
+                (
+                {(currentPage - 1) * 12 + 1}
+                -
+                {Math.min (currentPage * 12, totalPages * 12)}
+                {' '}
+                of
+                {' '}
+                {totalPages * 12}
+                {' '}
+                items)
               </p>
             </div>
           </div>
         </div>
-        
-{/* Community Connection Section */}
+
+        {/* Community Connection Section */}
         <div className="mt-20 mb-16">
           <div className="bg-gradient-to-r from-sky-50 to-sky-50 rounded-2xl overflow-hidden shadow-md">
             <div className="grid md:grid-cols-2 gap-0">
@@ -391,21 +477,35 @@ export const Items = ()=> {
                 <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100 text-sky-600 text-sm font-medium mb-6 w-fit">
                   <Users className="w-4 h-4" /> Community Stories
                 </span>
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">Share Your Trading Journey</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  Share Your Trading Journey
+                </h2>
                 <p className="text-lg text-sky-700 mb-8">
                   Connect with fellow traders, share your unique finds, and discover the stories behind every swap.
                 </p>
                 <div className="space-y-4 mb-8">
                   {[
-                    "Join local trading circles in your neighborhood",
-                    "Participate in seasonal community swap events",
-                    "Share the stories behind your most meaningful trades",
-                    "Connect with like-minded traders worldwide"
-                  ].map((feature, index) => (
+                    'Join local trading circles in your neighborhood',
+                    'Participate in seasonal community swap events',
+                    'Share the stories behind your most meaningful trades',
+                    'Connect with like-minded traders worldwide',
+                  ].map ((feature, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <div className="w-5 h-5 rounded-full bg-sky-100 flex items-center justify-center mt-1">
-                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 3.5L4 6.5L9 1.5" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg
+                          width="10"
+                          height="8"
+                          viewBox="0 0 10 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M1 3.5L4 6.5L9 1.5"
+                            stroke="#14b8a6"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
                         </svg>
                       </div>
                       <p className="text-sky-800">{feature}</p>
@@ -422,9 +522,9 @@ export const Items = ()=> {
                 </div>
               </div>
               <div className="relative h-64 md:h-auto overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80" 
-                  alt="Community trading event" 
+                <img
+                  src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80"
+                  alt="Community trading event"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-sky-500/20 to-sky-500/30 mix-blend-multiply" />
@@ -434,16 +534,20 @@ export const Items = ()=> {
                       <MapPin className="w-6 h-6 text-sky-600" />
                     </div>
                     <div>
-                      <p className="text-gray-900 font-semibold">120+ Local Communities</p>
-                      <p className="text-sky-500 text-sm">Find swapping events near you</p>
+                      <p className="text-gray-900 font-semibold">
+                        120+ Local Communities
+                      </p>
+                      <p className="text-sky-500 text-sm">
+                        Find swapping events near you
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>     
+        </div>
       </div>
     </div>
   );
-}
+};

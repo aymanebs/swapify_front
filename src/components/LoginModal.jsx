@@ -1,15 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { googleLogin, login } from '../services/authApi';
 import { useDispatch } from 'react-redux';
 import { setLogin } from '../store/usersSlice';
 import { toast } from 'react-toastify';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const LoginModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [effect, setEffect] = useState(false);
+  const token = searchParams.get('token');
+
+
+      useEffect(()=>{
+        function handleGoogleLogin(){
+          if(token){
+            dispatch(setLogin(token));
+            window.history.replaceState(null, '', window.location.pathname);
+    
+          }
+        }
+        handleGoogleLogin();
+      },[token])
+    
+
+
+
 
   const handleLogin = async(e) => {
     e.preventDefault();
@@ -38,8 +59,8 @@ const LoginModal = ({ isOpen, onClose }) => {
   const handleGoogleLogin = async () => {
 
     window.location.href = 'http://localhost:3000/auth/google/login';
-   
-    console.log('Google login clicked');
+    // window.location.reload();
+    // navigate('/');
   };
 
   if (!isOpen) return null;

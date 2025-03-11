@@ -42,7 +42,6 @@ const SwapProposal = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Proposal submitted:', { selectedItem, message });
   };
   
   const handleMessageChange = (e) => {

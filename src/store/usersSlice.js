@@ -6,7 +6,7 @@ export const usersSlice = createSlice({
     initialState: {
         access_token: localStorage.getItem('access_token'),
         isLoggedIn: localStorage.getItem('isLoggedIn') || false,
-        loggedUser: JSON.parse(localStorage.getItem('user') || '{}') ,
+        loggedUser: JSON.parse(localStorage.getItem('user') || "{}" ) ,
     },
 
     reducers: {
@@ -14,14 +14,13 @@ export const usersSlice = createSlice({
             localStorage.setItem('access_token',action.payload);
             state.access_token = action.payload;
             localStorage.setItem('isLoggedIn',true);
-            state.isLoggedIn = true;     
+            state.isLoggedIn = true;  
             const decodedToken = jwtDecode(action.payload);
             localStorage.setItem('user', JSON.stringify(decodedToken._doc));
             state.loggedUser = decodedToken._doc;
 
         },
         setLogout: (state, action) =>{
-            console.log('inside set logout reducer');
             localStorage.setItem('access_token','');
             state.access_token = '';
             localStorage.setItem('isLoggedIn','');
