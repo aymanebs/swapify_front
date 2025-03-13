@@ -12,9 +12,10 @@ import {
 } from 'lucide-react';
 import SwapProposal from '../components/SwapProposal';
 import Chat from '../components/Chat';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getAllUserItems, getOneItem } from '../services/itemsApi';
 import { createRequest } from '../services/requestsApi';
+import { toast } from 'react-toastify';
 
 function Swap () {
   const [view, setView] = useState ('swap');
@@ -22,6 +23,7 @@ function Swap () {
   const {targetItemId} = useParams();
   const [targetItem, setTargetItem] = useState(null);
   const [senderItems, setSenderItems] = useState([]);
+  const navigate = useNavigate();
 
   const swapDetails = {
     itemOffered: 'Professional DSLR Camera',
@@ -66,9 +68,13 @@ function Swap () {
   const handleSwapSubmit = async(data)=>{
     try{
       await createRequest(data);
+      navigate('/');
+      toast.success('Exchange request send succesfully',{theme: "colored"});
+      
     }
     catch(error){
       console.error('Failed to submit an exchange offer');
+       toast.error('Something went wrong!',{theme: "colored"});
     }
   }
 

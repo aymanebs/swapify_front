@@ -4,6 +4,7 @@ import axiosClient from "../config/axios";
 export const createRequest = async (requestsData)=>{
     try{
         const response = await axiosClient.post('/requests',requestsData);
+        if(response) console.log('request send');
         return response.data;
     }
     catch(error){
@@ -21,9 +22,29 @@ export const getAllRequests = async() =>{
     }
 }
 
-export const updateRequest = async(requestsData)=>{
+export const findByReceiverId = async() =>{
     try{
-        const response = await axiosClient.patch('/requests',requestsData);
+        const response = await axiosClient.get('/requests/received');
+        return response.data;
+    }
+    catch(error){
+        console.error('Failed to get received exchange requests: ', error);
+    }
+}
+
+export const findBySenderId = async() =>{
+    try{
+        const response = await axiosClient.get('/requests/sent');
+        return response.data;
+    }
+    catch(error){
+        console.error('Failed to get send exchange requests: ', error);
+    }
+}
+
+export const updateRequest = async(id,requestsData)=>{
+    try{
+        const response = await axiosClient.patch(`/requests/${id}`,requestsData);
         return response.data;
     }
     catch(error){

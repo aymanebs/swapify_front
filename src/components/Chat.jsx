@@ -1,229 +1,243 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, Image as ImageIcon, Phone, Video, MoreHorizontal, Paperclip, Smile, Mic, Clock, Shield } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Send, ArrowLeft, Paperclip, Image, Smile } from 'lucide-react';
 
-const Chat = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'other',
-      text: "Hi! I'm interested in your vintage camera. Would you consider swapping it for my professional audio interface?",
-      timestamp: new Date(Date.now() - 3600000)
-    },
-    {
-      id: 2,
-      sender: 'user',
-      text: "Hello! Yes, I'd be interested. Could you tell me more about the audio interface? What's the condition and brand?",
-      timestamp: new Date(Date.now() - 3000000)
-    },
-    {
-      id: 3,
-      sender: 'other',
-      text: "It's a Focusrite Scarlett 2i2 3rd Gen, purchased last year. Barely used and in excellent condition. I can send some photos if you'd like.",
-      timestamp: new Date(Date.now() - 2400000)
-    }
-  ]);
-  const [newMessage, setNewMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+const Chat = ({ 
+  activeChat, 
+  onClose, 
+  currentUser 
+}) => {
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-  
+
+  // Fetch chat messages when activeChat changes
+  useEffect(() => {
+    if (activeChat) {
+      fetchMessages();
+    }
+  }, [activeChat]);
+
+  // Auto scroll to bottom when messages update
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  
-  // Simulate typing indicator
-  useEffect(() => {
-    const typingTimer = setTimeout(() => {
-      if (messages[messages.length - 1].sender === 'user') {
-        setIsTyping(true);
-        setTimeout(() => setIsTyping(false), 3000);
-      }
-    }, 1000);
-    
-    return () => clearTimeout(typingTimer);
-  }, [messages]);
 
-  const handleSend = (e) => {
+  const fetchMessages = async () => {
+    setIsLoading(true);
+    try {
+      // Replace with your actual API call
+      // const response = await getChatMessages(activeChat.id);
+      // setMessages(response.data);
+      
+      // Mock data for demonstration
+      setTimeout(() => {
+        setMessages([
+          {
+            id: 1,
+            senderId: activeChat.user.id,
+            text: "Hi there! I'm interested in swapping with you.",
+            timestamp: new Date(Date.now() - 3600000).toISOString(),
+          },
+          {
+            id: 2,
+            senderId: currentUser.id,
+            text: "Thanks for accepting my swap request. When would you like to meet?",
+            timestamp: new Date(Date.now() - 1800000).toISOString(),
+          },
+          {
+            id: 3,
+            senderId: activeChat.user.id,
+            text: "How about tomorrow at 3pm?",
+            timestamp: new Date(Date.now() - 900000).toISOString(),
+          }
+        ]);
+        setIsLoading(false);
+      }, 500);
+    } catch (error) {
+      console.error('Failed to fetch messages:', error);
+      setIsLoading(false);
+    }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!message.trim()) return;
 
-    const message = {
-      id: messages.length + 1,
-      sender: 'user',
-      text: newMessage,
-      timestamp: new Date()
+    const newMessage = {
+      id: Date.now(),
+      senderId: currentUser.id,
+      text: message,
+      timestamp: new Date().toISOString(),
     };
 
-    setMessages([...messages, message]);
-    setNewMessage('');
+    // Optimistically update UI
+    setMessages(prev => [...prev, newMessage]);
+    setMessage('');
+
+    try {
+      // Replace with actual API call to send message
+      // await sendChatMessage(activeChat.id, message);
+      console.log('Message sent:', message);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      // Could remove the message from state if sending fails
+    }
   };
 
-  const formatTime = (date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    }).format(date);
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString();
+  };
+
+  const groupMessagesByDate = () => {
+    const groups = {};
+    
+    messages.forEach(msg => {
+      const date = formatDate(msg.timestamp);
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(msg);
+    });
+    
+    return groups;
+  };
+
+  if (!activeChat) {
+    return (
+      <div className="flex flex-col h-full items-center justify-center bg-white rounded-lg p-6">
+        <div className="text-center">
+          <p className="text-gray-500">Select a conversation to start chatting</p>
+        </div>
+      </div>
+    );
+  }
+
+  const messageGroups = groupMessagesByDate();
 
   return (
-    <div className="bg-gradient-to-b from-white to-sky-50 rounded-xl shadow-xl h-[calc(100vh-12rem)] overflow-hidden border border-sky-100">
-      <div className="flex flex-col h-full">
-        {/* Chat Header */}
-        <div className="p-4 bg-gradient-to-r from-sky-50 to-sky-100 backdrop-blur-lg shadow-sm border-b border-sky-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-r from-sky-400 to-sky-600 shadow-md flex items-center justify-center ring-2 ring-white">
-                  <span className="text-white font-semibold text-lg">JS</span>
-                </div>
-                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-green-400 border-2 border-white shadow-md flex items-center justify-center">
-                  <div className="h-2 w-2 rounded-full bg-white animate-ping"></div>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">John Smith</h3>
-                <div className="flex items-center">
-                  <div className="h-2 w-2 rounded-full bg-green-500 mr-2"></div>
-                  <p className="text-sm text-green-600 font-medium">Online</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <button className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors">
-                <Phone className="h-5 w-5" />
-              </button>
-              <button className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors">
-                <Video className="h-5 w-5" />
-              </button>
-              <button className="ml-2 flex items-center justify-center px-3 py-1.5 bg-sky-600 text-white rounded-full hover:bg-sky-700 transition shadow-md">
-                <Clock className="h-4 w-4 mr-1" />
-                <span className="text-xs font-medium">Schedule Meet</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-gradient-to-b from-sky-50/30 to-white/60 backdrop-blur-sm">
-          <div className="flex justify-center">
-            <div className="px-3 py-1 bg-sky-100 rounded-full text-xs text-sky-800 font-medium">
-              Today
-            </div>
-          </div>
-          
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              {message.sender === 'other' && (
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-sky-400 to-sky-600 flex items-center justify-center text-white font-medium text-sm mr-2 mt-2 shadow-sm">
-                  JS
-                </div>
-              )}
-              <div
-                className={`max-w-[70%] ${
-                  message.sender === 'user'
-                    ? 'bg-gradient-to-r from-sky-600 to-sky-700 text-white rounded-t-2xl rounded-bl-2xl shadow-lg'
-                    : 'bg-white border border-gray-200 text-gray-800 rounded-t-2xl rounded-br-2xl shadow-md'
-                } p-4`}
-              >
-                <p className="text-[15px] leading-relaxed">{message.text}</p>
-                <div className="flex justify-between items-center mt-2">
-                  <p
-                    className={`text-xs ${
-                      message.sender === 'user' ? 'text-sky-100' : 'text-gray-500'
-                    }`}
-                  >
-                    {formatTime(message.timestamp)}
-                  </p>
-                  {message.sender === 'user' && (
-                    <svg className="h-4 w-4 text-sky-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-          
-          {isTyping && (
-            <div className="flex justify-start">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-sky-400 to-sky-600 flex items-center justify-center text-white font-medium text-sm mr-2 shadow-sm">
-                JS
-              </div>
-              <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-md">
-                <div className="flex space-x-1">
-                  <div className="h-2 w-2 rounded-full bg-gray-400 animate-bounce" style={{animationDelay: '0ms'}}></div>
-                  <div className="h-2 w-2 rounded-full bg-gray-400 animate-bounce" style={{animationDelay: '150ms'}}></div>
-                  <div className="h-2 w-2 rounded-full bg-gray-400 animate-bounce" style={{animationDelay: '300ms'}}></div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Message Input */}
-        <div className="p-4 bg-white border-t border-sky-100 shadow-inner">
-          <form onSubmit={handleSend} className="flex items-center space-x-2">
-            <div className="flex items-center space-x-2 mr-2">
-              <button
-                type="button"
-                className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors"
-              >
-                <Paperclip className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors"
-              >
-                <ImageIcon className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                className="p-2 text-sky-600 hover:text-sky-800 hover:bg-sky-100 rounded-full transition-colors"
-              >
-                <Smile className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="flex-1 relative">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="w-full rounded-full border-gray-200 bg-gray-50 focus:border-sky-500 focus:ring focus:ring-sky-200 focus:ring-opacity-50 pl-4 pr-12 py-3 shadow-inner"
-              />
-              <button
-                type="button"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-sky-600"
-              >
-                <Mic className="h-5 w-5" />
-              </button>
-            </div>
-            <button
-              type="submit"
-              className="p-3 bg-gradient-to-r from-sky-600 to-sky-700 text-white rounded-full hover:from-sky-700 hover:to-sky-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-              disabled={!newMessage.trim()}
-            >
-              <Send className="h-5 w-5" />
-            </button>
-          </form>
-          
-          <div className="mt-2 flex justify-center">
-            <div className="text-xs text-gray-500 flex items-center">
-              <Shield className="h-3 w-3 text-sky-500 mr-1" />
-              Messages are secured with end-to-end encryption
-            </div>
+    <div className="flex flex-col h-full bg-white rounded-lg overflow-hidden">
+      {/* Chat Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b">
+        <div className="flex items-center">
+          <button 
+            onClick={onClose}
+            className="mr-2 p-1 rounded-full hover:bg-gray-100"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-500" />
+          </button>
+          <img 
+            src={activeChat.user.avatar} 
+            alt={activeChat.user.first_name} 
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <div className="ml-3">
+            <h3 className="font-medium text-gray-900">
+              {activeChat.user.first_name} {activeChat.user.last_name}
+            </h3>
+            <p className="text-sm text-gray-500">
+              {activeChat.item ? `Swapping: ${activeChat.item.name}` : 'Exchange Accepted'}
+            </p>
           </div>
         </div>
       </div>
+
+      {/* Chat Messages */}
+      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-full">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
+          </div>
+        ) : (
+          Object.entries(messageGroups).map(([date, msgs]) => (
+            <div key={date} className="mb-4">
+              <div className="flex justify-center mb-4">
+                <span className="px-3 py-1 bg-gray-200 rounded-full text-xs text-gray-600">
+                  {date}
+                </span>
+              </div>
+              {msgs.map((msg) => (
+                <div 
+                  key={msg.id} 
+                  className={`flex mb-4 ${msg.senderId === currentUser.id ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div 
+                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                      msg.senderId === currentUser.id 
+                        ? 'bg-sky-600 text-white rounded-br-none' 
+                        : 'bg-gray-200 text-gray-800 rounded-bl-none'
+                    }`}
+                  >
+                    <p className="text-sm">{msg.text}</p>
+                    <p 
+                      className={`text-xs mt-1 ${
+                        msg.senderId === currentUser.id ? 'text-sky-100' : 'text-gray-500'
+                      }`}
+                    >
+                      {formatTime(msg.timestamp)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Chat Input */}
+      <form onSubmit={handleSendMessage} className="border-t p-3">
+        <div className="flex items-center bg-gray-100 rounded-lg px-3 py-2">
+          <div className="flex space-x-1">
+            <button 
+              type="button"
+              className="text-gray-500 hover:text-sky-600 p-1 rounded-full hover:bg-gray-200"
+            >
+              <Paperclip className="h-5 w-5" />
+            </button>
+            <button 
+              type="button"
+              className="text-gray-500 hover:text-sky-600 p-1 rounded-full hover:bg-gray-200"
+            >
+              <Image className="h-5 w-5" />
+            </button>
+            <button 
+              type="button"
+              className="text-gray-500 hover:text-sky-600 p-1 rounded-full hover:bg-gray-200"
+            >
+              <Smile className="h-5 w-5" />
+            </button>
+          </div>
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type a message..."
+            className="flex-1 bg-transparent border-0 focus:ring-0 outline-none px-3 py-1"
+          />
+          <button 
+            type="submit"
+            disabled={!message.trim()}
+            className={`rounded-full p-2 ${
+              message.trim() 
+                ? 'bg-sky-600 text-white hover:bg-sky-700' 
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            <Send className="h-4 w-4" />
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

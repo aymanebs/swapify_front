@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { X, Upload, Image as ImageIcon, Trash2 } from 'lucide-react';
 import { getAllcategories } from '../services/categoriesApi';
 import { conditions } from '../constants/condition';
+import { createItem } from '../services/itemsApi';
 
 
 const CreateItemForm = ({onSubmit, onCancel }) => {
@@ -20,6 +21,7 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
   const [previewImages, setPreviewImages] = useState([]);
   
 
+
   useEffect(()=>{
     async function fetchCategories() {
 
@@ -32,10 +34,7 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
         }
     
     }
-
-    fetchCategories();
-
-    
+    fetchCategories(); 
   },[]);
 
   const handleChange = (e) => {
@@ -63,32 +62,47 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
       newErrors.name = 'Name must be at least 3 characters';
     } else if (formData.name.length > 20) {
       newErrors.name = 'Name must be less than 20 characters';
-    }
-    
+    }   
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     } else if (formData.description.length < 8) {
       newErrors.description = 'Description must be at least 8 characters';
-    }
-    
+    }    
     if (!formData.condition) {
       newErrors.condition = 'Condition is required';
     }
     
-    // if (!formData.categoryId) {
-    //   newErrors.categoryId = 'Category is required';
-    // }
+    if (!formData.category) {
+      newErrors.category = 'Category is required';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    
+  
     if (validateForm()) {
-      onSubmit(formData);
+    
+      const formDataToSend = new FormData();
+  
+    
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('condition', formData.condition);
+      formDataToSend.append('category', formData.category);
+  
+      formData.photos.forEach((file) => {
+        formDataToSend.append('images', file); 
+      });
+  
+      try {
+        onSubmit(formDataToSend); // Handle success
+      } catch (error) {
+        console.error('Failed to create item:', error);
+       
+      }
     }
   };
 
@@ -235,7 +249,7 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
               
                 }
             </select>
-            {/* {errors.categoryId && <p className="mt-1 text-sm text-red-500">{errors.categoryId}</p>} */}
+            {errors.category && <p className="mt-1 text-sm text-red-500">{errors.category}</p>}
           </div>
 
           <div>

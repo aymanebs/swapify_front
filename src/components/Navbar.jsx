@@ -4,19 +4,41 @@ import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../store/usersSlice";
+import socket, { identifyUser, onTradeRequestReceived } from "../services/socketService";
+
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [notifications, setNotifications] = useState(3); 
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState(0); 
+  const [notificationsList, setNotificationsList] = useState([]);
   const isLoggedIn = useSelector((state)=> state.users.isLoggedIn);
   const user = useSelector((state)=>state.users.loggedUser);
   const dispatch = useDispatch();
 
 
+useEffect(()=>{
+  identifyUser(user._id);
+},[user]);
 
+  // Listen for real-time trade request notifications
+  useEffect(() => {
+    const handleIncomingRequest = (payload) => {
+      setNotificationsList([...notificationsList,{message: payload.message,id: payload.receiverId, isRead: false}]);
+      setNotifications((prevState)=>prevState + 1);
+      console.log('Received trade request:', payload);
+    };
+
+    onTradeRequestReceived(handleIncomingRequest);
+
+    // Cleanup when component unmounts
+    return () => {
+      socket.off('tradeRequestCreated', handleIncomingRequest);
+    };
+  }, []);
  
 
   useEffect(() => {
@@ -27,17 +49,28 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isUserDropdownOpen && !event.target.closest('.user-dropdown-container')) {
         setIsUserDropdownOpen(false);
       }
+      if (isNotificationsOpen && !event.target.closest('.notifications-dropdown-container')) {
+        setIsNotificationsOpen(false);
+      }
     };
     
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isUserDropdownOpen]);
+  }, [isUserDropdownOpen, isNotificationsOpen]);
+
+  const markAllAsRead = () => {
+    console.log('notifications', notificationsList);
+    setNotificationsList(prev => prev.map(notification => ({...notification, isRead: true})));
+    setNotifications(0);
+  };
+
+
 
   return (
     <header 
@@ -76,8 +109,15 @@ export const Navbar = () => {
               <div className="hidden md:flex items-center gap-4">
 
                 {/* Notifications */}
-                <div className="relative">
-                  <button className="p-1.5 rounded-full hover:bg-sky-50 transition-all duration-300 relative">
+                <div className="relative notifications-dropdown-container">
+                  <button 
+                    onClick={
+                      () =>{setIsNotificationsOpen(!isNotificationsOpen);
+                      markAllAsRead();
+                      
+                    }} 
+                    className="p-1.5 rounded-full hover:bg-sky-50 transition-all duration-300 relative"
+                  >
                     <Bell className="h-5 w-5 text-gray-600" />
                     {notifications > 0 && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
@@ -85,6 +125,55 @@ export const Navbar = () => {
                       </span>
                     )}
                   </button>
+
+                  {/* Notifications Dropdown */}
+                  {isNotificationsOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100 overflow-hidden transition-all duration-300 animate-fadeIn">
+                      <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-sky-50 to-white flex items-center justify-between">
+                        <p className="text-sm font-semibold text-gray-800">Notifications</p>
+      
+                      </div>
+                      
+                      <div className="max-h-96 overflow-y-auto">
+                        {notificationsList.length > 0 ? (
+                          <ul className="py-1">
+                            {notificationsList.map((notification) => (
+                              <li key={notification.id} className={`border-b border-gray-50 last:border-0 ${!notification.isRead ? 'bg-sky-50' : ''}`}>
+                                <button 
+                                  onClick={''}
+                                  className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors duration-200"
+                                >
+                                  <div className="flex items-start gap-2">
+                                    {!notification.isRead && (
+                                      <span className="h-2 w-2 rounded-full bg-sky-500 mt-1.5 flex-shrink-0"></span>
+                                    )}
+                                    <div className={`flex-1 ${!notification.isRead ? '' : 'pl-4'}`}>
+                                      <p className="text-sm text-gray-800">{notification.message}</p>
+                                      <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                                    </div>
+                                  </div>
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="py-6 px-4 text-center">
+                            <p className="text-sm text-gray-500">No notifications yet</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="px-4 py-2 border-t border-gray-100 bg-gray-50">
+                        <Link 
+                          to="/notifications"
+                          className="block text-center text-xs font-medium text-sky-600 hover:text-sky-700"
+                          onClick={() => setIsNotificationsOpen(false)}
+                        >
+                          View all notifications
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* User Dropdown */}
@@ -161,9 +250,9 @@ export const Navbar = () => {
             <div className="flex md:hidden items-center gap-3">
               {/* Mobile User Profile Icon (when logged in) */}
               {isLoggedIn && (
-                <div className="relative mr-1">
+                <div className="relative notifications-dropdown-container">
                   <button 
-                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                    onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
                     className="relative p-1.5 rounded-full hover:bg-sky-50 transition-all duration-300"
                   >
                     <Bell className="h-5 w-5 text-gray-600" />
@@ -173,6 +262,54 @@ export const Navbar = () => {
                       </span>
                     )}
                   </button>
+                  
+                  {/* Mobile Notifications Dropdown */}
+                  {isNotificationsOpen && (
+                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100 overflow-hidden transition-all duration-300 animate-fadeIn">
+                      <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-sky-50 to-white flex items-center justify-between">
+                        <p className="text-sm font-semibold text-gray-800">Notifications</p>
+                      </div>
+                      
+                      <div className="max-h-96 overflow-y-auto">
+                        {notificationsList.length > 0 ? (
+                          <ul className="py-1">
+                            {notificationsList.map((notification) => (
+                              <li key={notification.id} className={`border-b border-gray-50 last:border-0 ${!notification.isRead ? 'bg-sky-50' : ''}`}>
+                                <button 
+                                  onClick={() => markAsRead(notification.id)}
+                                  className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors duration-200"
+                                >
+                                  <div className="flex items-start gap-2">
+                                    {!notification.isRead && (
+                                      <span className="h-2 w-2 rounded-full bg-sky-500 mt-1.5 flex-shrink-0"></span>
+                                    )}
+                                    <div className={`flex-1 ${!notification.isRead ? '' : 'pl-4'}`}>
+                                      <p className="text-sm text-gray-800">{notification.message}</p>
+                                      <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                                    </div>
+                                  </div>
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="py-6 px-4 text-center">
+                            <p className="text-sm text-gray-500">No notifications yet</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="px-4 py-2 border-t border-gray-100 bg-gray-50">
+                        <Link 
+                          to="/notifications"
+                          className="block text-center text-xs font-medium text-sky-600 hover:text-sky-700"
+                          onClick={() => setIsNotificationsOpen(false)}
+                        >
+                          View all notifications
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
               

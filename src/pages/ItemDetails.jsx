@@ -26,6 +26,7 @@ const ItemDetails = () => {
       async function fetchItem(){
         try{
           const data = await getOneItem(itemId);
+          console.log(data);
           setItem(data);
         }
         catch(error){
@@ -154,7 +155,7 @@ const ItemDetails = () => {
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg text-gray-900">{user.first_name + ' ' + user.last_name }</h3>
+                  <h3 className="font-semibold text-lg text-gray-900">{item.userId?.first_name + ' ' + item.userId?.last_name }</h3>
                   <div className="flex items-center space-x-2">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
