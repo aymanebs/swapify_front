@@ -25,6 +25,7 @@ import {useNavigate} from 'react-router-dom';
 import {getAllItems} from '../services/itemsApi';
 import {getAllcategories} from '../services/categoriesApi';
 import { conditions } from '../constants/condition';
+import { getImageUrl } from '../helpers/getImageUrl';
 
 export const Items = () => {
   const [categories, setCategories] = useState ([]);
@@ -36,6 +37,8 @@ export const Items = () => {
   const totalPages = 8;
   const [items, setItems] = useState ([]);
   const [filtredItems, setFiltredItems] = useState ([]);
+
+  console.log('filtred items: ',filtredItems);
 
   useEffect (() => {
     async function fetchItems () {
@@ -377,8 +380,8 @@ export const Items = () => {
                 >
                   <div className="relative">
                     <img
-                      src={`https://images.unsplash.com/photo-${1550000000000 + item}?auto=format&fit=crop&w=500&q=60`}
-                      alt="Item"
+                      src={getImageUrl(item?.photos[0])}
+                      alt={item.name}
                       className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <button className="absolute top-3 right-3 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 group-hover:scale-110">

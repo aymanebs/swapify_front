@@ -4,9 +4,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getOneItem } from '../services/itemsApi';
 import { useSelector } from 'react-redux';
 import { daysPassed } from '../helpers/daysPassed';
+import { getImageUrl } from '../helpers/getImageUrl';
 
 const ItemDetails = () => {
   
+ 
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
@@ -36,17 +38,23 @@ const ItemDetails = () => {
       fetchItem();
     },[itemId]);
 
+    console.log('item: ', item);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4">
     <main className="max-w-7xl mx-auto mt-16 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div className="space-y-6">
           <div className="relative group">
-            <img
-              src={images[selectedImage]}
+            {item &&
+            (
+              <img
+              src={getImageUrl(item.photos[selectedImage])}
               alt="Item"
               className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg transition-transform duration-300 group-hover:shadow-xl"
             />
+            )
+            }
             <div className="absolute top-4 right-4 flex space-x-2">
               <button className="p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white transition-all duration-300">
                 <Share2 className="w-5 h-5 text-gray-700" />
@@ -56,14 +64,13 @@ const ItemDetails = () => {
               </button>
             </div>
             <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg">
-              <div className="flex items-center space-x-1">
-                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                <span className="text-sm font-medium text-gray-900">Premium Item</span>
-              </div>
             </div>
           </div>
           <div className="grid grid-cols-4 gap-4">
-            {images.map((img, i) => (
+          
+            {
+            item && (
+            item.photos.map((img, i) => (
               <button
                 key={i}
                 onClick={() => setSelectedImage(i)}
@@ -72,7 +79,7 @@ const ItemDetails = () => {
                 } transition duration-200`}
               >
                 <img
-                  src={img}
+                  src={getImageUrl(img)}
                   alt={`Item view ${i + 1}`}
                   className="w-full aspect-square object-cover"
                 />
@@ -80,7 +87,9 @@ const ItemDetails = () => {
                   <div className="absolute inset-0 bg-sky-500/10" />
                 )}
               </button>
-            ))}
+            ))
+            )
+          }
           </div>
         </div>
 
