@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check, X, ExternalLink } from 'lucide-react';
 import { daysPassed } from '../helpers/daysPassed';
+import { getImageUrl } from '../helpers/getImageUrl';
 
 const ReceivedRequests = ({ requests, onAccept, onRefuse }) => {
   
@@ -53,7 +54,7 @@ const ReceivedRequests = ({ requests, onAccept, onRefuse }) => {
                 <div className="mt-2">
                   <div className="flex items-center">
                     <img 
-                      src={request.itemRequested?.photos} 
+                      src={getImageUrl(request.itemRequested?.photos[0])} 
                       alt={request.itemRequested?.name}
                       className="w-16 h-16 rounded-lg object-cover"
                     />
@@ -70,7 +71,7 @@ const ReceivedRequests = ({ requests, onAccept, onRefuse }) => {
                 <div className="mt-2">
                   <div className="flex items-center">
                     <img 
-                      src={request.itemOffered?.photos} 
+                      src={getImageUrl(request.itemOffered?.photos[0])} 
                       alt={request.itemOffered?.name}
                       className="w-16 h-16 rounded-lg object-cover"
                     />

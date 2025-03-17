@@ -14,6 +14,8 @@ import { findByReceiverId, findBySenderId, updateRequest } from "../services/req
 import ReceivedRequests from "../components/ReceivedRequests";
 import ChatList from "../components/ChatList";
 import Chat from "../components/Chat";
+import { getAllChats } from "../services/chatsApi";
+import { onChatCreated } from "../services/socketService";
 
 function Profile() {
   const [activeTab, setActiveTab] = useState("myItems");
@@ -82,57 +84,11 @@ function Profile() {
   },[]);
 
  // Fetch chats
- useEffect(() => {
-  async function fetchChats() {
-    try {
-      // Replace with your actual API call
-      // const data = await getUserChats();
-      // setChatList(data);
-      
-      // Mock data for demonstration
-      setTimeout(() => {
-        setChatList([
-          {
-            id: '1',
-            user: {
-              id: '101',
-              first_name: 'Alice',
-              last_name: 'Johnson',
-              avatar: 'https://i.pravatar.cc/150?img=1'
-            },
-            lastMessage: 'When can we meet for the exchange?',
-            lastMessageTime: '2h ago',
-            unread: 2,
-            item: {
-              id: '201',
-              name: 'Vintage Camera'
-            }
-          },
-          {
-            id: '2',
-            user: {
-              id: '102',
-              first_name: 'Bob',
-              last_name: 'Smith',
-              avatar: 'https://i.pravatar.cc/150?img=2'
-            },
-            lastMessage: 'Thanks for accepting the swap!',
-            lastMessageTime: '1d ago',
-            unread: 0,
-            item: {
-              id: '202',
-              name: 'Mountain Bike'
-            }
-          }
-        ]);
-      }, 500);
-    } catch (error) {
-      console.error('Failed to fetch chats', error);
-    }
-  }
-  
-  fetchChats();
-}, []);
+  useEffect(() => {
+    onChatCreated((newChat) => {
+      setChatList((prevChats) => [...prevChats, newChat]);
+    });
+  }, []);
 
 // Handling create item
 

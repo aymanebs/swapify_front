@@ -6,6 +6,9 @@ const ChatList = ({
   onSelectChat, 
   activeChat 
 }) => {
+
+  console.log('chat list inside chat list', chatList);
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="p-4 border-b">

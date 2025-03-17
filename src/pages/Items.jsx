@@ -388,12 +388,6 @@ export const Items = () => {
                       <Heart className="w-5 h-5 text-sky-600" />
                     </button>
                     <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-lg transform transition-transform duration-300 group-hover:translate-y-[-4px]">
-                      <div className="flex items-center space-x-1">
-                        <Sparkles className="w-4 h-4 text-sky-500" />
-                        <span className="text-sm font-medium text-sky-900">
-                          Premium
-                        </span>
-                      </div>
                     </div>
                   </div>
                   <div className="p-5">

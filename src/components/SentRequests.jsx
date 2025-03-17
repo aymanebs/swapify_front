@@ -1,6 +1,7 @@
 import React from 'react';
 import { MessageCircle, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { daysPassed } from '../helpers/daysPassed';
+import { getImageUrl } from '../helpers/getImageUrl';
 
 const SentRequests = ({ requests, onStartChat }) => {
 
@@ -68,7 +69,7 @@ const SentRequests = ({ requests, onStartChat }) => {
                 <div className="mt-2">
                   <div className="flex items-center">
                     <img 
-                      src={request.itemOffered?.imageUrl} 
+                      src={getImageUrl(request.itemOffered?.photos[0])} 
                       alt={request.itemOffered?.name}
                       className="w-16 h-16 rounded-lg object-cover"
                     />
@@ -85,7 +86,7 @@ const SentRequests = ({ requests, onStartChat }) => {
                 <div className="mt-2">
                   <div className="flex items-center">
                     <img 
-                      src={request.requestedItem?.imageUrl} 
+                      src={getImageUrl(request.requestedItem?.photos[0])} 
                       alt={request.requestedItem?.name}
                       className="w-16 h-16 rounded-lg object-cover"
                     />
