@@ -85,10 +85,15 @@ function Profile() {
 
  // Fetch chats
   useEffect(() => {
+    console.log("Calling onChatCreated...");
     onChatCreated((newChat) => {
       setChatList((prevChats) => [...prevChats, newChat]);
     });
   }, []);
+
+  useEffect(()=>{
+    console.log('chat list inside profile: ',chatList);
+  },[])
 
 // Handling create item
 
@@ -200,6 +205,8 @@ function Profile() {
       setShowChatView(false);
       setActiveChat(null);
     };
+
+
 
   return (
     <div className="min-h-screen bg-gray-50">

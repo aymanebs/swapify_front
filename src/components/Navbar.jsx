@@ -21,8 +21,27 @@ export const Navbar = () => {
 
 
 useEffect(()=>{
-  identifyUser(user._id);
+
+    if (user?._id) {
+      identifyUser(user._id);
+    }
+    
 },[user]);
+
+  useEffect(() => {
+    const handleReconnect = () => {
+      console.log('🟢 WebSocket reconnected. Re-identifying user...');
+      if (user?._id) {
+        identifyUser(user._id);
+      }
+    };
+
+    socket.on('connect', handleReconnect);
+
+    return () => {
+      socket.off('connect', handleReconnect);  
+    };
+  }, [user]);
 
   // Listen for real-time trade request notifications
   useEffect(() => {

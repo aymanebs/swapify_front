@@ -4,7 +4,6 @@ import axiosClient from "../config/axios";
 export const createRequest = async (requestsData)=>{
     try{
         const response = await axiosClient.post('/requests',requestsData);
-        if(response) console.log('request send');
         return response.data;
     }
     catch(error){

@@ -7,14 +7,10 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
   const [messageLength, setMessageLength] = useState(0);
   const [showInfo, setShowInfo] = useState(null);
 
-  console.log('sender items inside swap', senderItems );
-
-  console.log('target Item', targetItem);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = {receiver: targetItem.userId, itemOffered: selectedItem, itemRequested: targetItem._id};
+    const data = {receiver: targetItem.userId._id, itemOffered: selectedItem, itemRequested: targetItem._id};
     submit(data);
   };
   
@@ -22,9 +18,6 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
     setMessage(e.target.value);
     setMessageLength(e.target.value.length);
   };
-
-
-
 
   return (
     <div className="bg-gradient-to-br from-white to-sky-50 rounded-xl shadow-xl p-8 border border-sky-100">
@@ -98,7 +91,7 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {senderItems.map((item) => (
               <div
-                key={item.id}
+                key={item._id}
                 className={`group relative rounded-xl transition-all duration-300 overflow-hidden ${
                   selectedItem === item._id
                     ? 'ring-4 ring-sky-500 ring-offset-2 scale-105 z-10'

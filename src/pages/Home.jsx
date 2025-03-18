@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Banner } from "../components/Banner";
 import { Cta } from "../components/Cta";
 import HowItWorks from "../components/HowItWorks";
@@ -5,8 +6,27 @@ import Newsletter from "../components/Newsletter";
 import ProductGrid from "../components/ProductGrid";
 import Stats from "../components/Stats";
 import Testimonials from "../components/Testimonials";
+import { getLastItems } from "../services/itemsApi";
 
 const Home =()=>{
+
+  const [fetchedItems, setFetchedItems]= useState([]);
+
+  useEffect(()=>{
+    async function fetchItems(){
+      try{
+        const data = await getLastItems();
+        setFetchedItems([...data]);
+      }
+      catch(error){
+        console.error('Failed to fetch items in home: ',error);
+      }
+  
+  
+    }
+    fetchItems()
+  },[]);
+
 
     return(
        
@@ -35,7 +55,14 @@ const Home =()=>{
 
       {/* Products Section */}
       <section className=" bg-white">
-        <ProductGrid />
+        {
+         fetchedItems.length>0 &&(
+          <ProductGrid 
+          items = {fetchedItems}
+          />
+         )
+        }
+   
       </section>
 
       {/* Testimonials */}

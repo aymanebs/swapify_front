@@ -39,25 +39,25 @@ const ChatList = ({
               <div className="flex items-start">
                 <div className="relative">
                   <img 
-                    src={chat.user.avatar} 
-                    alt={chat.user.first_name}
+                    src={chat?.user.avatar} 
+                    alt={chat?.user.first_name}
                     className="w-12 h-12 rounded-full object-cover"
                   />
-                  {chat.unread > 0 && (
+                  {chat?.unread > 0 && (
                     <span className="absolute top-0 right-0 h-4 w-4 bg-sky-600 rounded-full border-2 border-white"></span>
                   )}
                 </div>
                 <div className="ml-3 flex-1">
                   <div className="flex justify-between items-start">
                     <h3 className="font-medium text-gray-900">
-                      {chat.user.first_name} {chat.user.last_name}
+                      {chat?.user.first_name} {chat?.user.last_name}
                     </h3>
-                    <span className="text-xs text-gray-500">{chat.lastMessageTime}</span>
+                    <span className="text-xs text-gray-500">{chat?.lastMessageTime}</span>
                   </div>
-                  <p className="text-sm text-gray-600 truncate">{chat.lastMessage}</p>
+                  <p className="text-sm text-gray-600 truncate">{chat?.lastMessage}</p>
                   <div className="mt-1 flex items-center">
                     <span className="text-xs text-gray-500">
-                      {chat.item && `Swapping: ${chat.item.name}`}
+                      {chat?.item && `Swapping: ${chat?.item.name}`}
                     </span>
                   </div>
                 </div>

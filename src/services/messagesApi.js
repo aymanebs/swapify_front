@@ -7,7 +7,7 @@ export const createMessage = async(messageData)=>{
         await axiosClient.post('/messages', messageData);
     }
     catch(error){
-        console.log('Failed to create message: ', error);
+        console.error('Failed to create message: ', error);
     }
 }
 

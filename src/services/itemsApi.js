@@ -20,9 +20,9 @@ export const getAllUserItems = async()=>{
     }
 }
 
-export const getAllItems = async ()=>{
+export const getAllItems = async (page,limit)=>{
     try{
-        const response = await axiosClient.get('/items');
+        const response = await axiosClient.get(`/items/?page=${page}&limit=${limit}`);
         return response.data;
     }
     catch(error){
@@ -40,9 +40,18 @@ export const getOneItem = async (itemId)=>{
     }
 }
 
+export const getLastItems = async ()=>{
+    try{
+        const response = await axiosClient.get('/items/recent');
+        return response.data;
+    }
+    catch(error){
+        console.error('Failed to fetch recent items', error);
+    }
+}
+
 export const updateItem = async (itemId,itemsData) => {
     try{
-        console.log('éééééééé itemId', itemId);
         await axiosClient.put(`/items/${itemId}`, itemsData);
     }
     catch(error){

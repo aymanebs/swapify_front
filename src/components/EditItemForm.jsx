@@ -17,7 +17,6 @@ const EditItemForm = ({ item, onSubmit, onCancel }) => {
   
   const [errors, setErrors] = useState({});
   
-console.log('formData : ',formData);
   useEffect(()=>{
     async function fetchCategories() {
 
@@ -41,10 +40,7 @@ console.log('formData : ',formData);
     setFormData({
       ...formData,
       [name]: value
-    });
-
-    console.log('name: ',value);
-    
+    });    
    
     if (errors[name]) {
       setErrors({

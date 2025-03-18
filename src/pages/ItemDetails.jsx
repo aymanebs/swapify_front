@@ -16,6 +16,10 @@ const ItemDetails = () => {
     const [item, setItem] = useState(''); 
     let navigate = useNavigate();
     const user = useSelector((state)=> state.users.loggedUser);
+
+    console.log('item', item);
+
+  
   
     const images = [
       'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
@@ -28,7 +32,6 @@ const ItemDetails = () => {
       async function fetchItem(){
         try{
           const data = await getOneItem(itemId);
-          console.log(data);
           setItem(data);
         }
         catch(error){
@@ -37,8 +40,6 @@ const ItemDetails = () => {
       }
       fetchItem();
     },[itemId]);
-
-    console.log('item: ', item);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4">
@@ -177,16 +178,18 @@ const ItemDetails = () => {
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              {/* <button className="w-full py-4 px-6 bg-gray-900 text-gray-50 font-medium rounded-xl hover:bg-gray-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg flex items-center justify-center">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Message
-              </button> */}
-              <button
-               className="w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
-               onClick={()=>navigate(`/swap/${itemId}`)}
-               >
-                Propose Swap
-              </button>
+              {
+                 item && user._id != item.userId._id &&
+                (
+                  <button
+                  className= "w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                  onClick={()=>navigate(`/swap/${itemId}`)}
+                  >
+                   Propose Swap
+                 </button>
+                )
+              }
+             
             </div>
           </div>
         </div>

@@ -1,6 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 
+
+const token = localStorage.getItem("access_token");
+let isTokenValid = false;
+let decodedUser = {};
+
+if (token) {
+    try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp > currentTime) {
+            isTokenValid = true;
+            decodedUser = decodedToken._doc;
+        } else {
+            localStorage.clear(); 
+        }
+    } catch (error) {
+        console.error("Invalid token:", error);
+        localStorage.clear(); 
+    }
+}
+
 export const usersSlice = createSlice({
     name: 'users',
     initialState: {

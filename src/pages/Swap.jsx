@@ -11,14 +11,13 @@ import {
   Users,
 } from 'lucide-react';
 import SwapProposal from '../components/SwapProposal';
-import Chat from '../components/Chat';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAllUserItems, getOneItem } from '../services/itemsApi';
 import { createRequest } from '../services/requestsApi';
 import { toast } from 'react-toastify';
 
 function Swap () {
-  const [view, setView] = useState ('swap');
+
   const [animateBackground, setAnimateBackground] = useState (false);
   const {targetItemId} = useParams();
   const [targetItem, setTargetItem] = useState(null);
@@ -61,16 +60,12 @@ function Swap () {
     fetchItem();
   },[targetItemId]);
 
-  useEffect(()=>{
-    console.log('target item', targetItem);
-  },[targetItem]);
+
 
   const handleSwapSubmit = async(data)=>{
     try{
       await createRequest(data);
-      navigate('/');
-      toast.success('Exchange request send succesfully',{theme: "colored"});
-      
+      navigate('/');     
     }
     catch(error){
       console.error('Failed to submit an exchange offer');
@@ -123,39 +118,27 @@ function Swap () {
             <div className="border-b border-gray-100 bg-gradient-to-r from-white to-gray-50">
               <div className="flex">
                 <button
-                  className={`relative py-5 px-8 focus:outline-none transition-all duration-300 ${view === 'swap' ? 'text-sky-600 font-medium' : 'text-gray-500 hover:text-gray-700'}`}
-                  onClick={() => setView ('swap')}
+                  className={`relative py-5 px-8 focus:outline-none transition-all duration-300 text-sky-600 font-medium}`}
+                  onClick={''}
                 >
                   Make Offer
-                  {view === 'swap' &&
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-600 to-sky-600" />}
+              
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-600 to-sky-600" />
                 </button>
-                <button
-                  className={`relative py-5 px-8 focus:outline-none transition-all duration-300 ${view === 'chat' ? 'text-sky-600 font-medium' : 'text-gray-500 hover:text-gray-700'}`}
-                  onClick={() => setView ('chat')}
-                >
-                  <div className="flex items-center">
-                    Chat
-                    <div className="ml-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center">
-                      <span className="text-xs text-white font-medium">3</span>
-                    </div>
-                  </div>
-                  {view === 'chat' &&
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-sky-600 to-sky-600" />}
-                </button>
+       
               </div>
             </div>
 
       
 
             <div className="p-6 sm:p-8">
-              {view === 'swap' ?
+      
                <SwapProposal
                 senderItems={senderItems}
                 targetItem={targetItem} 
                 submit={handleSwapSubmit}
                      
-              /> : <Chat />}
+              /> 
             </div>
           </div>
 
@@ -237,13 +220,6 @@ function Swap () {
                   </div>
                 </div>
               </div>
-              <a
-                href="#"
-                className="relative z-10 mt-6 inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-sky-600 rounded-lg shadow-md hover:from-purple-700 hover:to-sky-700 transition-all"
-              >
-                View all swap safety guidelines
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </a>
             </div>
           </div>
         </div>
