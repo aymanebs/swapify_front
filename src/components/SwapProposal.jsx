@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Package2, Cuboid as Cube, Star, Shield, Camera, UserCheck, ArrowRight, RefreshCw, Check, MessageCircle } from 'lucide-react';
+import { Package2, Cuboid as Cube, Star, Shield, Camera, UserCheck, ArrowRight, RefreshCw, Check, MessageCircle, Package, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const SwapProposal = ({senderItems,targetItem, submit}) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -87,66 +88,90 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
             </label>
             <span className="text-sm text-sky-600 font-medium">{selectedItem ? '1' : '0'}/1 Selected</span>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {senderItems.map((item) => (
-              <div
-                key={item._id}
-                className={`group relative rounded-xl transition-all duration-300 overflow-hidden ${
-                  selectedItem === item._id
-                    ? 'ring-4 ring-sky-500 ring-offset-2 scale-105 z-10'
-                    : 'hover:shadow-2xl hover:translate-y-1 border border-gray-200'
-                }`}
-                onClick={() => setSelectedItem(item._id)}
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={item?.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-80" />
-                  
-                  {/* Top badges */}
-                  <div className="absolute top-3 left-3 flex space-x-2">
-                    <span className="bg-sky-500/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
-                      {item.condition}
-                    </span>
-                  </div>
-                  
-                  {/* Item name */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <h3 className="font-semibold text-lg text-white">{item.name}</h3>
-                  </div>
-                </div>
-                
-                {/* Additional info panel */}
-                <div className={`p-4 bg-white border-t border-gray-100 ${selectedItem === item.id ? 'bg-sky-50' : ''}`}>
-                  <div className="flex items-center justify-between">
-          
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                        <RefreshCw className="h-4 w-4 text-gray-600" />
-                      </div>
-                      <div className="ml-2">
-                        <p className="text-xs text-gray-500">Swaps</p>
-                        <p className="text-sm font-medium text-gray-900">{item.swapCount}</p>
-                      </div>
+          {
+            senderItems && senderItems.length> 0 ?
+            (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {senderItems.map((item) => (
+                <div
+                  key={item._id}
+                  className={`group relative rounded-xl transition-all duration-300 overflow-hidden ${
+                    selectedItem === item._id
+                      ? 'ring-4 ring-sky-500 ring-offset-2 scale-105 z-10'
+                      : 'hover:shadow-2xl hover:translate-y-1 border border-gray-200'
+                  }`}
+                  onClick={() => setSelectedItem(item._id)}
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={item?.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Overlay gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-80" />
+                    
+                    {/* Top badges */}
+                    <div className="absolute top-3 left-3 flex space-x-2">
+                      <span className="bg-sky-500/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
+                        {item.condition}
+                      </span>
+                    </div>
+                    
+                    {/* Item name */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="font-semibold text-lg text-white">{item.name}</h3>
                     </div>
                   </div>
                   
-                  {/* Selection indicator */}
-                  {selectedItem === item.id && (
-                    <div className="mt-3 flex items-center justify-center bg-sky-600 text-white rounded-lg p-2">
-                      <Check className="h-4 w-4 mr-1" />
-                      <span className="text-sm font-medium">Selected for Swap</span>
+                  {/* Additional info panel */}
+                  <div className={`p-4 bg-white border-t border-gray-100 ${selectedItem === item.id ? 'bg-sky-50' : ''}`}>
+                    <div className="flex items-center justify-between">
+            
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                          <RefreshCw className="h-4 w-4 text-gray-600" />
+                        </div>
+                        <div className="ml-2">
+                          <p className="text-xs text-gray-500">Swaps</p>
+                          <p className="text-sm font-medium text-gray-900">{item.swapCount}</p>
+                        </div>
+                      </div>
                     </div>
-                  )}
+                    
+                    {/* Selection indicator */}
+                    {selectedItem === item.id && (
+                      <div className="mt-3 flex items-center justify-center bg-sky-600 text-white rounded-lg p-2">
+                        <Check className="h-4 w-4 mr-1" />
+                        <span className="text-sm font-medium">Selected for Swap</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
+              ))}
+            </div>
+            ):
+            (
+              <div className="flex flex-col items-center justify-center py-12 px-4">
+              <div className="bg-gray-50 rounded-xl p-8 text-center w-full max-w-md border border-gray-200">
+                <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                  <Package className="h-8 w-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">No items available</h3>
+                <p className="text-gray-500 mb-6">You haven't added any items to swap yet.</p>
+                <Link 
+                  to="/profile" 
+                  className="inline-flex items-center justify-center px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors duration-200"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  <span>Add Items to Swap</span>
+                </Link>
               </div>
-            ))}
-          </div>
+            </div>
+            )
+          }
+        
+
         </div>
 
         <button

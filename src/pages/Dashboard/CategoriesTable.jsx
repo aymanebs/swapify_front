@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Plus, Filter, Download, MoreVertical, Edit, Trash } from 'lucide-react';
+import { getAllcategories } from '../../services/categoriesApi';
+import { formatDate } from '../../helpers/formatDate';
 
 const CategoriesTable = () => {
  
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Electronics",dateCreated: "24/05/2023" },
-    { id: 2, name: "Clothes",dateCreated: "24/05/2023" },
-    { id: 3, name: "Furniture",dateCreated: "24/05/2023" },
-    { id: 4, name: "Books",dateCreated: "24/05/2023" },
-  ]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(()=>{
+    async function fetchCategories(){
+      try{
+        const data = await getAllcategories();
+        setCategories(data);
+      }
+      catch(error){
+        console.error('Failed to fetch categories: ', error);
+      }
+    };
+    fetchCategories();
+  },[]);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -78,40 +88,60 @@ const CategoriesTable = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-              {categories.map((category) => (
-                <tr key={category.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 mr-3">
-                        <span className="font-medium text-sm">
-                          {category.name.split(' ').map(name => name[0]).join('')}
-                        </span>
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-900">{category.name}</div>
-                      </div>
-                    </div>
-                  </td>
 
-       
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {category.dateCreated}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end space-x-3">
-                      <button className="text-gray-500 hover:text-indigo-600 transition-colors">
-                        <Edit size={16} />
-                      </button>
-                      <button className="text-gray-500 hover:text-red-600 transition-colors">
-                        <Trash size={16} />
-                      </button>
-                      <button className="text-gray-500 hover:text-gray-900 transition-colors">
-                        <MoreVertical size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {categories && categories.length>0 ?
+              (
+                categories.map((category) => (
+                  <tr key={category._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 mr-3">
+                          <span className="font-medium text-sm">
+                            {category.name.split(' ').map(name => name[0]).join('')}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">{category.name}</div>
+                        </div>
+                      </div>
+                    </td>
+  
+         
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      { formatDate(category.createdAt)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-3">
+                        <button className="text-gray-500 hover:text-indigo-600 transition-colors">
+                          <Edit size={16} />
+                        </button>
+                        <button className="text-gray-500 hover:text-red-600 transition-colors">
+                          <Trash size={16} />
+                        </button>
+                        <button className="text-gray-500 hover:text-gray-900 transition-colors">
+                          <MoreVertical size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ):
+              
+              (
+                <tr>
+                <td colSpan="4" className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <h3 className="text-sm font-medium text-gray-900">No users found</h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      No Categories are available at this time.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+              )
+            
+            }
+         
             </tbody>
           </table>
         </div>

@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
-import { Search, Plus, Filter, Download, MoreVertical, Edit, Trash, User, Mail, Phone, Shield } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Search, Plus, Filter, Download, MoreVertical, Edit, Trash, User, Mail, Phone, Shield, Users } from 'lucide-react';
+import { getAllUsers } from '../../services/usersApi';
+import { formatDate } from '../../helpers/formatDate';
 
 const UsersTable = () => {
+
+  const [users, setUsers] = useState([]);
+
+  //Fetch Users
+
+  useEffect(()=>{
+    async function fetchUsers(){
+      try{
+        const data = await getAllUsers();
+        setUsers(data);
+      }
+      catch(error){
+        console.error('Failed to fetch users in dashboard: ',error);
+      }
+    };
+    fetchUsers();
+  },[])
  
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", email: "john.doe@example.com", role: "Admin", status: "Active", dateJoined: "24/05/2023" },
-    { id: 2, name: "Jane Smith", email: "jane.smith@example.com", role: "Editor", status: "Active", dateJoined: "12/08/2023" },
-    { id: 3, name: "Robert Johnson", email: "robert@example.com", role: "Viewer", status: "Inactive", dateJoined: "30/11/2023" },
-    { id: 4, name: "Emily Davis", email: "emily@example.com", role: "Editor", status: "Active", dateJoined: "15/02/2024" },
-    { id: 5, name: "Michael Wilson", email: "michael@example.com", role: "Admin", status: "Active", dateJoined: "08/04/2024" },
-  ]);
-
-
 
   return (
     <div className="p-6 max-w-full bg-gray-50 min-h-screen">
@@ -62,9 +72,7 @@ const UsersTable = () => {
                 <th className="px-6 py-3.5 text-left font-medium text-xs uppercase tracking-wider text-gray-500">
                   User
                 </th>
-                <th className="px-6 py-3.5 text-left font-medium text-xs uppercase tracking-wider text-gray-500">
-                  Role
-                </th>
+      
                 <th className="px-6 py-3.5 text-left font-medium text-xs uppercase tracking-wider text-gray-500">
                   Status
                 </th>
@@ -78,58 +86,70 @@ const UsersTable = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-              {users.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 mr-3">
-                        <span className="font-medium text-sm">
-                          {user.name.split(' ').map(name => name[0]).join('')}
-                        </span>
+
+              {users && users.length> 0 ?
+              (
+                users.map((user) => (
+                  <tr key={user._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 mr-3">
+                          <span className="font-medium text-sm">
+                            {user.first_name.split(' ').map(name => name[0]).join('')}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">{user.first_name + ' ' + user.last_name}</div>
+                          <div className="text-sm text-gray-500">{user.email}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-gray-900">{user.name}</div>
-                        <div className="text-sm text-gray-500">{user.email}</div>
+                    </td>
+  
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                        ${user?.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
+                      >
+                        <span className={`w-1.5 h-1.5 rounded-full mr-1.5 
+                          ${user?.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`}
+                        ></span>
+                        {user?.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {formatDate(user.createdAt)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end space-x-3">
+                        <button className="text-gray-500 hover:text-indigo-600 transition-colors">
+                          <Edit size={16} />
+                        </button>
+                        <button className="text-gray-500 hover:text-red-600 transition-colors">
+                          <Trash size={16} />
+                        </button>
+                        <button className="text-gray-500 hover:text-gray-900 transition-colors">
+                          <MoreVertical size={16} />
+                        </button>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                      ${user.role === 'Admin' ? 'bg-purple-100 text-purple-800' : 
-                       user.role === 'Editor' ? 'bg-blue-100 text-blue-800' : 
-                       'bg-gray-100 text-gray-800'}`}
-                    >
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                      ${user.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
-                    >
-                      <span className={`w-1.5 h-1.5 rounded-full mr-1.5 
-                        ${user.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`}
-                      ></span>
-                      {user.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {user.dateJoined}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end space-x-3">
-                      <button className="text-gray-500 hover:text-indigo-600 transition-colors">
-                        <Edit size={16} />
-                      </button>
-                      <button className="text-gray-500 hover:text-red-600 transition-colors">
-                        <Trash size={16} />
-                      </button>
-                      <button className="text-gray-500 hover:text-gray-900 transition-colors">
-                        <MoreVertical size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ))
+              )
+                   
+              :
+              (
+                <tr>
+                <td colSpan="4" className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <h3 className="text-sm font-medium text-gray-900">No users found</h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      No users are available at this time.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+              )
+
+            }
             </tbody>
           </table>
         </div>
