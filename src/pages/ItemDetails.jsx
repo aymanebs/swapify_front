@@ -4,9 +4,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getOneItem } from '../services/itemsApi';
 import { useSelector } from 'react-redux';
 import { daysPassed } from '../helpers/daysPassed';
+import { getImageUrl } from '../helpers/getImageUrl';
 
 const ItemDetails = () => {
   
+ 
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
@@ -14,6 +16,10 @@ const ItemDetails = () => {
     const [item, setItem] = useState(''); 
     let navigate = useNavigate();
     const user = useSelector((state)=> state.users.loggedUser);
+
+    console.log('item', item);
+
+  
   
     const images = [
       'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
@@ -41,11 +47,15 @@ const ItemDetails = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div className="space-y-6">
           <div className="relative group">
-            <img
-              src={images[selectedImage]}
+            {item &&
+            (
+              <img
+              src={getImageUrl(item.photos[selectedImage])}
               alt="Item"
               className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg transition-transform duration-300 group-hover:shadow-xl"
             />
+            )
+            }
             <div className="absolute top-4 right-4 flex space-x-2">
               <button className="p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white transition-all duration-300">
                 <Share2 className="w-5 h-5 text-gray-700" />
@@ -55,14 +65,13 @@ const ItemDetails = () => {
               </button>
             </div>
             <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg">
-              <div className="flex items-center space-x-1">
-                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                <span className="text-sm font-medium text-gray-900">Premium Item</span>
-              </div>
             </div>
           </div>
           <div className="grid grid-cols-4 gap-4">
-            {images.map((img, i) => (
+          
+            {
+            item && (
+            item.photos.map((img, i) => (
               <button
                 key={i}
                 onClick={() => setSelectedImage(i)}
@@ -71,7 +80,7 @@ const ItemDetails = () => {
                 } transition duration-200`}
               >
                 <img
-                  src={img}
+                  src={getImageUrl(img)}
                   alt={`Item view ${i + 1}`}
                   className="w-full aspect-square object-cover"
                 />
@@ -79,7 +88,9 @@ const ItemDetails = () => {
                   <div className="absolute inset-0 bg-sky-500/10" />
                 )}
               </button>
-            ))}
+            ))
+            )
+          }
           </div>
         </div>
 
@@ -154,7 +165,7 @@ const ItemDetails = () => {
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg text-gray-900">{user.first_name + ' ' + user.last_name }</h3>
+                  <h3 className="font-semibold text-lg text-gray-900">{item.userId?.first_name + ' ' + item.userId?.last_name }</h3>
                   <div className="flex items-center space-x-2">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
@@ -167,16 +178,18 @@ const ItemDetails = () => {
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              {/* <button className="w-full py-4 px-6 bg-gray-900 text-gray-50 font-medium rounded-xl hover:bg-gray-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg flex items-center justify-center">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Message
-              </button> */}
-              <button
-               className="w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
-               onClick={()=>navigate('/swap')}
-               >
-                Propose Swap
-              </button>
+              {
+                 item && user._id != item.userId._id &&
+                (
+                  <button
+                  className= "w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                  onClick={()=>navigate(`/swap/${itemId}`)}
+                  >
+                   Propose Swap
+                 </button>
+                )
+              }
+             
             </div>
           </div>
         </div>

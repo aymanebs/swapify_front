@@ -1,4 +1,5 @@
 import { Edit, Trash2 } from 'lucide-react';
+import { getImageUrl } from '../helpers/getImageUrl';
 
 export default function ItemsList({ items,onEdit, onDelete }){
 
@@ -16,13 +17,13 @@ export default function ItemsList({ items,onEdit, onDelete }){
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {items.map((item) => (
             <div key={item._id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition">
-              {/* <div className="h-48 overflow-hidden">
+              <div className="h-48 overflow-hidden">
                 <img 
-                  src={item.imageUrl} 
+                  src={getImageUrl(item.photos[0])} 
                   alt={item.name} 
                   className="w-full h-full object-cover"
                 />
-              </div> */}
+              </div>
               <div className="p-4">
                 <h3 className="font-semibold text-lg text-gray-800">{item.name}</h3>
                 <p className="text-gray-600 text-sm mt-1 line-clamp-2">{item.description}</p>

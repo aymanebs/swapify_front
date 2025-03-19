@@ -32,8 +32,8 @@ const AppRouter = () =>{
                 <Route path="/itemDetails/:itemId" element={<ItemDetails/>}/>
                 <Route path="contact" element={<Contact/>}/>
                 <Route element={<ProtectedRoutes/>}>
-                    <Route path="swap" element={<Swap/>}/>
-                    <Route path="profile" element={<Profile/>}/>    
+                    <Route path="/swap/:targetItemId" element={<Swap/>}/>
+                    <Route path="/profile" element={<Profile/>}/>    
                 </Route>        
             </Route>
 

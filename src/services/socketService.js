@@ -1,0 +1,36 @@
+// src/socket.js
+import { io } from 'socket.io-client';
+
+const socket = io(import.meta.env.VITE_BACKEND_URL, { transports: ['websocket'] });
+
+// Identify user
+export const identifyUser = (userId) => {
+  socket.emit('identify', userId);
+};
+
+// Listen for trade requests
+export const onTradeRequestReceived = (callback) => {
+  socket.on('tradeRequestCreated', callback);
+};
+
+// Listen for new chats
+export const onChatCreated = (callback) => {
+  socket.on('chatCreated', callback);
+};
+
+// Listen for new messages
+export const onNewMessage = (callback) => {
+  socket.on('newMessage', callback);
+};
+
+// Join a chat room
+export const joinChat = (chatId) => {
+  socket.emit('joinChat', chatId);
+};
+
+// Send a message
+export const sendMessage = (messageData) => {
+  socket.emit('sendMessage', messageData);
+};
+
+export default socket;

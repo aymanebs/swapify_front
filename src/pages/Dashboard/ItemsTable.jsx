@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Plus, Filter, Download, MoreVertical, Edit, Trash } from 'lucide-react';
+import { getAllItems } from '../../services/itemsApi';
+import { formatDate } from '../../helpers/formatDate';
 
 const ItemsTable = () => {
  
-  const [items, setItems] = useState([
-    { id: 1, name: "Prenium Item 1",condition: "Excellant",category:"electronics",dateCreated: "24/05/2023" },    
-    { id: 3, name: "Prenium Item 3",condition: "Excellant",category:"electronics",dateCreated: "24/05/2023" },
-    { id: 4, name: "Prenium Item 4",condition: "Excellant",category:"electronics",dateCreated: "24/05/2023" },
-  ]);
+  const [items, setItems] = useState();
 
+    useEffect(()=>{
+      async function fetchItems(){
+        try{
+          const data = await getAllItems();
+          setItems(data);
+        }
+        catch(error){
+          console.error('Failed to fetch items: ', error);
+        }
+      };
+      fetchItems();
+    },[]);
 
 
   return (
@@ -76,8 +86,10 @@ const ItemsTable = () => {
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-              {items.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
+              {items && items.lenght>0 ? (
+
+              items.map((item) => (
+                <tr key={item._id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 mr-3">
@@ -98,9 +110,9 @@ const ItemsTable = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {item.category}
                   </td>
-     
+
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {item.dateCreated}
+                    {formatDate(item.createdAt)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-3">
@@ -116,7 +128,24 @@ const ItemsTable = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+
+              ):
+              (
+                <tr>
+                <td colSpan="4" className="px-6 py-12 text-center">
+                  <div className="flex flex-col items-center justify-center">
+                    <h3 className="text-sm font-medium text-gray-900">No items found</h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      No Items are available at this time.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+              )
+              
+              }
+    
             </tbody>
           </table>
         </div>

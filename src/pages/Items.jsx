@@ -25,6 +25,8 @@ import {useNavigate} from 'react-router-dom';
 import {getAllItems} from '../services/itemsApi';
 import {getAllcategories} from '../services/categoriesApi';
 import { conditions } from '../constants/condition';
+import { getImageUrl } from '../helpers/getImageUrl';
+import ProductCard from '../components/ProductCard';
 
 export const Items = () => {
   const [categories, setCategories] = useState ([]);
@@ -33,22 +35,24 @@ export const Items = () => {
   const [showFilters, setShowFilters] = useState (false);
   const [scrolled, setScrolled] = useState (false);
   const [currentPage, setCurrentPage] = useState (1);
-  const totalPages = 8;
+  const [totalPages, setTotalPages] =useState(1);
   const [items, setItems] = useState ([]);
   const [filtredItems, setFiltredItems] = useState ([]);
+  const limit = 10;
 
   useEffect (() => {
-    async function fetchItems () {
+    async function fetchItems (currentPage,limit) {
       try {
-        const items = await getAllItems ();
-        setItems (items);
-        setFiltredItems (items);
+        const data = await getAllItems(currentPage,limit);
+        setItems (data.items);
+        setFiltredItems (data.items);
+        setTotalPages(data.totalPages);
       } catch (error) {
         console.error ('Failed to fetch items', error);
       }
     }
-    fetchItems ();
-  }, []);
+    fetchItems (currentPage,limit);
+  }, [currentPage]);
 
 
 
@@ -87,38 +91,36 @@ export const Items = () => {
     {title: 'Near You', icon: MapPin, count: 234},
   ];
 
-  const handleFilter = (category,condition, query) => {
-    setSelectedCategories (prev => {
-      const updatedCategories = prev.includes (category)
-        ? prev.filter (c => c !== category)
+  const handleFilter = (category, condition, query) => {
+    setSelectedCategories(prev => {
+      const updatedCategories = prev.includes(category)
+        ? prev.filter(c => c !== category)
         : [...prev, category];
-
-      if(updatedCategories.length > 0){
-      setFiltredItems (
-        items.filter(item => updatedCategories.includes (item.category.name))
-      );
+  
+      let filteredItems = items;
+  
+      if (updatedCategories.length > 0) {
+        filteredItems = filteredItems.filter(item => updatedCategories.includes(item.category.name));
       }
-
-      if(condition){
-        setFiltredItems(items.filter(item => item.condition == condition));
+  
+      if (condition) {
+        filteredItems = filteredItems.filter(item => item.condition === condition);
       }
-
-      if(query){
-        setFiltredItems(items.filter((item)=>item.name.toLowerCase().includes(query.toLowerCase())));
+  
+      if (query) {
+        filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
       }
-
-      else{
-        setFiltredItems(items);
-      }
-
+  
+      setFiltredItems(filteredItems);
       return updatedCategories;
     });
   };
+  
 
 
 
   const handlePageChange = page => {
-    setCurrentPage (page);
+    setCurrentPage(page);
     window.scrollTo ({
       top: document.getElementById ('productsSection').offsetTop - 100,
       behavior: 'smooth',
@@ -157,7 +159,7 @@ export const Items = () => {
         i <= Math.min (totalPages - 1, currentPage + 1);
         i++
       ) {
-        if (i === 1 || i === totalPages) continue; // Skip first and last pages as they're always shown
+        if (i === 1 || i === totalPages) continue; 
         items.push (
           <button
             key={i}
@@ -230,17 +232,8 @@ export const Items = () => {
             <p className="text-sky-100 text-xl mb-8 leading-relaxed">
               Join our vibrant community of traders and discover amazing items. Trade up to your dream items with our smart matching system.
             </p>
-            <div className="flex gap-4 mb-16">
-              <button className="group px-8 py-4 bg-white text-sky-600 rounded-xl font-semibold hover:bg-sky-50 transition-all duration-300 shadow-lg shadow-sky-500/20 relative overflow-hidden">
-                <span className="relative z-10">Start Trading</span>
-                <div className="absolute inset-0 h-full w-0 bg-gradient-to-r from-sky-50 to-white transition-all duration-300 group-hover:w-full" />
-              </button>
-              <button className="group px-8 py-4 bg-sky-500 text-white rounded-xl font-semibold hover:bg-sky-400 transition-all duration-300 shadow-lg shadow-sky-600/30 backdrop-blur-sm relative overflow-hidden">
-                <span className="relative z-10">Learn More</span>
-                <div className="absolute inset-0 h-full w-0 bg-gradient-to-r from-sky-400 to-sky-500 transition-all duration-300 group-hover:w-full" />
-              </button>
-            </div>
-            <div className="grid grid-cols-3 gap-8">
+
+            <div className="grid grid-cols-3 gap-8 mt-10">
               {stats.map (({icon: Icon, label, value}) => (
                 <div key={label} className="text-center group">
                   <Icon className="w-6 h-6 text-sky-200 mx-auto mb-2 transform transition-transform group-hover:scale-110 duration-300" />
@@ -274,21 +267,6 @@ export const Items = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        <div className="mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {featuredCollections.map (({title, icon: Icon, count}) => (
-              <div
-                key={title}
-                className="group bg-gradient-to-br from-sky-600 to-sky-300 rounded-xl p-6 text-white hover:scale-[1.02] transition-all duration-300 cursor-pointer relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                <Icon className="w-8 h-8 mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-xl font-semibold mb-2">{title}</h3>
-                <p className="text-sky-100">{count} items available</p>
-              </div>
-            ))}
-          </div>
-        </div>
 
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
@@ -371,51 +349,7 @@ export const Items = () => {
           <div className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtredItems.map (item => (
-                <div
-                  key={item._id}
-                  className="group bg-white rounded-xl shadow-sm overflow-hidden border border-sky-100 hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="relative">
-                    <img
-                      src={`https://images.unsplash.com/photo-${1550000000000 + item}?auto=format&fit=crop&w=500&q=60`}
-                      alt="Item"
-                      className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <button className="absolute top-3 right-3 p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-all duration-300 group-hover:scale-110">
-                      <Heart className="w-5 h-5 text-sky-600" />
-                    </button>
-                    <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-lg transform transition-transform duration-300 group-hover:translate-y-[-4px]">
-                      <div className="flex items-center space-x-1">
-                        <Sparkles className="w-4 h-4 text-sky-500" />
-                        <span className="text-sm font-medium text-sky-900">
-                          Premium
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-sky-600 transition-colors">
-                        {item.name}
-                      </h3>
-                    </div>
-                    <div className="flex items-center text-sm text-sky-500 mb-4">
-                      <Package className="w-4 h-4 mr-1.5" />
-                      <span>{item.condition}</span>
-                      <span className="mx-2">•</span>
-                      <span>{item.category.name}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-sky-400">New York, NY</span>
-                      <button
-                        onClick={() => navigate (`/itemDetails/${item._id}`)}
-                        className="px-4 py-2 bg-sky-50 text-sky-600 rounded-lg text-sm font-medium hover:bg-sky-100 transition-colors group-hover:bg-sky-600 group-hover:text-white"
-                      >
-                        View Details
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              <ProductCard key={item._id} item={item} />
               ))}
             </div>
 
