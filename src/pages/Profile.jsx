@@ -32,6 +32,7 @@ function Profile() {
   const [activeChat, setActiveChat] = useState(null);
   const [chatList, setChatList] = useState([]);
   const [showChatView, setShowChatView] = useState(false);
+  const [isChatLoading, setIsChatLoading] = useState(true);
 
 // Fetching Items
   useEffect(() => {
@@ -83,17 +84,33 @@ function Profile() {
     fetchSentRequests();
   },[]);
 
- // Fetch chats
-  useEffect(() => {
-    console.log("Calling onChatCreated...");
-    onChatCreated((newChat) => {
-      setChatList((prevChats) => [...prevChats, newChat]);
-    });
-  }, []);
+ //  Listen for Chat Creation event
 
-  useEffect(()=>{
-    console.log('chat list inside profile: ',chatList);
-  },[])
+useEffect(() => {
+  console.log("Calling onChatCreated...");
+  onChatCreated((newChat) => {
+    setChatList((prevChats) => [...prevChats, newChat]);
+  });
+}, []);
+
+//  fetch the user's existing chats
+useEffect(() => {
+  async function fetchChats() {
+    try {
+      const chats = await getAllChats();
+      setChatList(chats);
+    } catch (error) {
+      console.error('Failed to fetch chats:', error);
+    } finally {
+      setIsChatLoading(false); // Set loading to false after fetching
+    }
+  }
+
+  if (user?._id) {
+    fetchChats();
+  }
+}, [user]);
+
 
 // Handling create item
 
@@ -284,11 +301,13 @@ function Profile() {
                 >
                   <MessageCircle className="h-4 w-4 mr-2" />
                   Messages
-                  {chatList.reduce((count, chat) => count + chat.unread, 0) > 0 && (
-                    <span className="ml-2 bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full text-xs">
-                      {chatList.reduce((count, chat) => count + chat.unread, 0)}
-                    </span>
-                  )}
+                  {
+  chatList && Array.isArray(chatList) && chatList.reduce((count, chat) => count + (chat.unread || 0), 0) > 0 && (
+    <span className="ml-2 bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full text-xs">
+      {chatList.reduce((count, chat) => count + (chat.unread || 0), 0)}
+    </span>
+  )
+}
                 </button>
 
                 <button
