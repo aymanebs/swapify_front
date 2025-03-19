@@ -3,6 +3,10 @@ import { Search, MessageCircle } from 'lucide-react';
 
 
 const ChatList = ({ chatList, onSelectChat, activeChat }) => {
+
+  console.log('Logging chat list inside chat list...', chatList);
+
+
   if (!chatList || chatList.length === 0) {
     return (
       <div className="py-8 text-center">
@@ -13,6 +17,8 @@ const ChatList = ({ chatList, onSelectChat, activeChat }) => {
       </div>
     );
   }
+
+
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">

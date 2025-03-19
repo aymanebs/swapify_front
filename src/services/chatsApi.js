@@ -12,3 +12,13 @@ export const getAllChats = async()=>{
     }
 }
 
+export const getChatById = async(id)=>{
+    try{
+        const response = await axiosClient.get(`/chats/${id}`);
+        return response.data;
+    }
+    catch(error){
+        console.error('Failed to to get chat: ',error);
+    }
+}
+

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, ArrowLeft, Paperclip, Image, Smile } from 'lucide-react';
+import { getChatById } from '../services/chatsApi';
+import socket from '../services/socketService';
 
 const Chat = ({ activeChat, onClose, currentUser }) => {
   const [message, setMessage] = useState('');
@@ -9,6 +11,7 @@ const Chat = ({ activeChat, onClose, currentUser }) => {
   useEffect(() => {
     if (activeChat) {
       fetchMessages();
+      joinChatRoom(activeChat._id);
     }
   }, [activeChat]);
 
@@ -19,6 +22,7 @@ const Chat = ({ activeChat, onClose, currentUser }) => {
   const fetchMessages = async () => {
     try {
       const chat = await getChatById(activeChat._id);
+      console.log('verifyting chat.messages: ',chat.messages);
       setMessages(chat.messages);
     } catch (error) {
       console.error('Failed to fetch messages:', error);
@@ -29,24 +33,39 @@ const Chat = ({ activeChat, onClose, currentUser }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const joinChatRoom = (chatId) => {
+    socket.emit('joinChat', chatId);
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-
+  
     const newMessage = {
+      chatId: activeChat._id, 
       sender: currentUser._id,
-      receiver: activeChat.participants.find(p => p._id !== currentUser._id)._id,
       content: message,
     };
-
+  
     try {
-      const createdMessage = await createMessage(newMessage);
-      setMessages((prev) => [...prev, createdMessage]);
+      // Send the message via WebSocket
+      socket.emit('sendMessage', newMessage);
       setMessage('');
     } catch (error) {
       console.error('Failed to send message:', error);
     }
   };
+
+  // Listen for new messages
+  useEffect(() => {
+    socket.on('newMessage', (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    return () => {
+      socket.off('newMessage');
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-full bg-white rounded-lg overflow-hidden">
@@ -94,7 +113,7 @@ const Chat = ({ activeChat, onClose, currentUser }) => {
       </div>
 
       <form onSubmit={handleSendMessage} className="border-t p-3">
-        <div className="flex items-center bg-gray-100 rounded-lg px-3 py-2">
+        <div className="flex items-center text-gray-800 bg-gray-100 rounded-lg px-3 py-2">
           <input
             type="text"
             value={message}

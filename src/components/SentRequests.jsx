@@ -51,7 +51,7 @@ const SentRequests = ({ requests, onStartChat }) => {
                   {getStatusIcon(request.status)}
                   <span className="ml-2 capitalize">{request.status}</span>
                 </span>
-                {request.status === 'accepted' && (
+                {/* {request.status === 'accepted' && (
                   <button
                     onClick={() => onStartChat(request._id, request?.receiver._id)}
                     className="flex items-center px-3 py-1.5 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition"
@@ -59,7 +59,7 @@ const SentRequests = ({ requests, onStartChat }) => {
                     <MessageCircle className="h-4 w-4 mr-1" />
                     Chat
                   </button>
-                )}
+                )} */}
               </div>
             </div>
             
