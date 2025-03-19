@@ -282,17 +282,13 @@ export const Items = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {categories.map (category => (
               <button
-                key={category.name}
-                onClick={() => handleFilter(category.name, '')}
-                className="relative group overflow-hidden rounded-xl aspect-square"
+              key={category.name}
+              onClick={() => handleFilter(category.name, '')}
+              className="bg-sky-500 hover:bg-sky-600 rounded-lg p-4 text-white transition-all duration-200 flex items-center justify-center h-20 shadow-sm hover:shadow"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-sky-900/90 to-sky-900/20 group-hover:from-sky-800/90 transition-colors duration-300" />
-                <div className="absolute inset-0 p-4 flex flex-col justify-end transform transition-transform duration-300 group-hover:translate-y-[-8px]">
-                  <h3 className="text-white font-semibold text-lg mb-1">
-                    {category.name}
-                  </h3>
-
-                </div>
+              <span className="font-semibold text-lg uppercase tracking-wide text-center">
+                {category.name}
+              </span>
               </button>
             ))}
           </div>

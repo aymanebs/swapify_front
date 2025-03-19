@@ -58,7 +58,7 @@ function Profile() {
     async function fetchReceivedRequests() {
       try {
         const received = await findByReceiverId();       
-        const filteredReceived = received.filter((req) => req.status !== 'rejected');   
+        const filteredReceived = received.filter((req) => req.status !== 'rejected' );   
         setReceivedRequests(filteredReceived);       
       }
       catch (error) {
@@ -211,6 +211,26 @@ useEffect(() => {
     }
   };
 
+    // handle mark exchange request as complete
+  const handleCompleteRequest = async (requestId) => {
+    try {
+      await updateRequest(requestId, { status: 'completed' });
+      setReceivedRequests((prev) => prev.map((req) => (req._id === requestId ? { ...req, status: 'completed' } : req)));
+    } catch (error) {
+      console.error('Failed to complete request', error);
+    }
+  };
+  
+   // handle cancel exchange request
+  const handleCancelRequest = async (requestId) => {
+    try {
+      await updateRequest(requestId, { status: 'rejected' });
+      setReceivedRequests((prev) => prev.filter((req) => req._id !== requestId));
+    } catch (error) {
+      console.error('Failed to cancel request', error);
+    }
+  };
+
     // Handle selecting a chat from the list
     const handleSelectChat = (chat) => {
       setActiveChat(chat);
@@ -222,8 +242,6 @@ useEffect(() => {
       setShowChatView(false);
       setActiveChat(null);
     };
-
-
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -384,6 +402,8 @@ useEffect(() => {
                         requests={receivedRequests}
                         onAccept={handleAcceptRequest}
                         onRefuse={handleRefuseRequest}
+                        onComplete={handleCompleteRequest}
+                        onCancel={handleCancelRequest}
                       />
                     </>
                   ) :
