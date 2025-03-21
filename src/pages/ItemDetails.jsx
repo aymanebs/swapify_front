@@ -2,44 +2,57 @@ import React, { useEffect, useState } from 'react';
 import { MessageCircle, Share2, Flag, Heart, UserCircle2, Star, MapPin, Calendar, Package } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOneItem } from '../services/itemsApi';
+import { getUserAverageRating } from '../services/ratingApi';
 import { useSelector } from 'react-redux';
 import { daysPassed } from '../helpers/daysPassed';
 import { getImageUrl } from '../helpers/getImageUrl';
+import RenderStars from '../components/renderStars';
 
 const ItemDetails = () => {
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [item, setItem] = useState('');
+  const [userRating, setUserRating] = useState(0);
+  const { itemId } = useParams();
+  let navigate = useNavigate();
+  const user = useSelector((state) => state.users.loggedUser);
+
+  console.log('item', item);
   
- 
 
-    const [selectedImage, setSelectedImage] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
-    const {itemId} = useParams();
-    const [item, setItem] = useState(''); 
-    let navigate = useNavigate();
-    const user = useSelector((state)=> state.users.loggedUser);
-
-    console.log('item', item);
-
-  
-  
-    const images = [
-      'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
-      'https://images.unsplash.com/photo-1495707902641-75cac588d2e9',
-      'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848',
-      'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f'
-    ];
-
-    useEffect(()=>{
-      async function fetchItem(){
-        try{
-          const data = await getOneItem(itemId);
-          setItem(data);
-        }
-        catch(error){
-          console.error('Failed to fetch the item: ', error)
+  useEffect(() => {
+    async function fetchItem() {
+      try {
+        const data = await getOneItem(itemId);
+        setItem(data);
+        
+        // Fetch user rating once we have the item data
+        if (data && data.userId && data.userId._id) {
+          fetchUserRating(data.userId._id);
         }
       }
-      fetchItem();
-    },[itemId]);
+      catch (error) {
+        console.error('Failed to fetch the item: ', error);
+      }
+    }
+    
+    async function fetchUserRating(userId) {
+      try {
+        const rating = await getUserAverageRating(userId);
+        setUserRating(rating);
+      } catch (error) {
+        console.error('Failed to fetch user rating: ', error);
+        setUserRating(0);
+      }
+    }
+    
+    fetchItem();
+  }, [itemId]);
+
+
+
+
+  console.log('userRating: ',userRating);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-16 px-4">
@@ -47,15 +60,13 @@ const ItemDetails = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div className="space-y-6">
           <div className="relative group">
-            {item &&
-            (
+            {item && (
               <img
-              src={getImageUrl(item.photos[selectedImage])}
-              alt="Item"
-              className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg transition-transform duration-300 group-hover:shadow-xl"
-            />
-            )
-            }
+                src={getImageUrl(item.photos[selectedImage])}
+                alt="Item"
+                className="w-full aspect-[4/3] object-cover rounded-2xl shadow-lg transition-transform duration-300 group-hover:shadow-xl"
+              />
+            )}
             <div className="absolute top-4 right-4 flex space-x-2">
               <button className="p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg hover:bg-white transition-all duration-300">
                 <Share2 className="w-5 h-5 text-gray-700" />
@@ -68,29 +79,26 @@ const ItemDetails = () => {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-4">
-          
-            {
-            item && (
-            item.photos.map((img, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedImage(i)}
-                className={`relative rounded-lg overflow-hidden ${
-                  selectedImage === i ? 'ring-2 ring-sky-500' : 'hover:opacity-80'
-                } transition duration-200`}
-              >
-                <img
-                  src={getImageUrl(img)}
-                  alt={`Item view ${i + 1}`}
-                  className="w-full aspect-square object-cover"
-                />
-                {selectedImage === i && (
-                  <div className="absolute inset-0 bg-sky-500/10" />
-                )}
-              </button>
-            ))
-            )
-          }
+            {item && (
+              item.photos.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`relative rounded-lg overflow-hidden ${
+                    selectedImage === i ? 'ring-2 ring-sky-500' : 'hover:opacity-80'
+                  } transition duration-200`}
+                >
+                  <img
+                    src={getImageUrl(img)}
+                    alt={`Item view ${i + 1}`}
+                    className="w-full aspect-square object-cover"
+                  />
+                  {selectedImage === i && (
+                    <div className="absolute inset-0 bg-sky-500/10" />
+                  )}
+                </button>
+              ))
+            )}
           </div>
         </div>
 
@@ -106,7 +114,7 @@ const ItemDetails = () => {
                   </div>
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-1" />
-                    <span className="text-sm">Listed {daysPassed(item.createdAt)} days ago</span>
+                    <span className="text-sm">Listed {daysPassed(item.createdAt)}</span>
                   </div>
                 </div>
               </div>
@@ -121,7 +129,6 @@ const ItemDetails = () => {
                 <Heart className={`w-6 h-6 ${isLiked ? 'fill-current' : ''}`} />
               </button>
             </div>
-
           </div>
 
           <div className="space-y-6 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -165,31 +172,30 @@ const ItemDetails = () => {
                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg text-gray-900">{item.userId?.first_name + ' ' + item.userId?.last_name }</h3>
+                  <h3 className="font-semibold text-lg text-gray-900">{item.userId?.first_name + ' ' + item.userId?.last_name}</h3>
                   <div className="flex items-center space-x-2">
                     <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                      ))}
+                      <RenderStars
+                        rating={userRating.averageRating}
+                      />
                     </div>
+                    {userRating > 0 && (
+                      <span className="text-sm text-gray-600">({userRating.toFixed(1)})</span>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              {
-                 item && user._id != item.userId._id &&
-                (
-                  <button
-                  className= "w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
-                  onClick={()=>navigate(`/swap/${itemId}`)}
-                  >
-                   Propose Swap
-                 </button>
-                )
-              }
-             
+              {item && user._id != item.userId._id && (
+                <button
+                  className="w-full py-4 px-6 bg-sky-600 text-emerald-50 font-medium rounded-xl hover:bg-sky-800 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg"
+                  onClick={() => navigate(`/swap/${itemId}`)}
+                >
+                  Propose Swap
+                </button>
+              )}
             </div>
           </div>
         </div>

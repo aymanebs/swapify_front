@@ -284,7 +284,7 @@ export const Items = () => {
               <button
               key={category.name}
               onClick={() => handleFilter(category.name, '')}
-              className="bg-sky-500 hover:bg-sky-600 rounded-lg p-4 text-white transition-all duration-200 flex items-center justify-center h-20 shadow-sm hover:shadow"
+              className="bg-sky-400 hover:bg-sky-600 rounded-lg p-4 text-white transition-all duration-200 flex items-center justify-center h-20 shadow-sm hover:shadow"
               >
               <span className="font-semibold text-lg uppercase tracking-wide text-center">
                 {category.name}

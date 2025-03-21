@@ -13,6 +13,7 @@ import UsersTable from "../pages/Dashboard/UsersTable";
 import CategoriesTable from "../pages/Dashboard/CategoriesTable";
 import ItemsTable from "../pages/Dashboard/ItemsTable";
 import { useSelector } from "react-redux";
+import RatePage from "../pages/RatingPage";
 
 
 const AppRouter = () =>{
@@ -34,6 +35,7 @@ const AppRouter = () =>{
                 <Route element={<ProtectedRoutes/>}>
                     <Route path="/swap/:targetItemId" element={<Swap/>}/>
                     <Route path="/profile" element={<Profile/>}/>    
+                    <Route path="/rate/:receiverId" element={<RatePage/>}/>
                 </Route>        
             </Route>
 

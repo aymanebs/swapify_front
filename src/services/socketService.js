@@ -33,4 +33,11 @@ export const sendMessage = (messageData) => {
   socket.emit('sendMessage', messageData);
 };
 
+// Listen for the requestCompleted event
+socket.on('requestCompleted', (data) => {
+  console.log('Request completed:', data);
+  // Redirect the user to the rating page
+  window.location.href = `/rate/${data.receiverId}?requestId=${data.requestId}`;
+});
+
 export default socket;
