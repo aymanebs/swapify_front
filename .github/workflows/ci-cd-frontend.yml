@@ -3,10 +3,10 @@ name: CI/CD Pipeline for Swapify Frontend
 on:
   push:
     branches:
-      - main
+      - feature/notation
   pull_request:
     branches:
-      - main
+      - feature/notation
 
 jobs:
   build-and-push-frontend:
