@@ -4,7 +4,7 @@ import ItemsList from "../components/UserItemsList";
 import CreateItemForm from "../components/CreateItemForm";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import EditProfileForm from "../components/editProfileForm";
+import EditProfileForm from "../components/EditProfileForm";
 import EditItemForm from "../components/EditItemForm";
 import { createItem, deleteItem, getAllUserItems, updateItem } from "../services/itemsApi";
 import Spinner from "../components/Spinner";
