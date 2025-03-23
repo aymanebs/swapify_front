@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+RUN ls -la src/components/
+RUN ls -la src/components/layouts/
+RUN cat src/components/layouts/AppLayout.jsx
+
 RUN npm run build
 
 EXPOSE 5180
