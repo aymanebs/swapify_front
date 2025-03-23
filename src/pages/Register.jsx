@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 export const Register = ()=>{
 
     const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({});
 
     const [formData, setFormData] = useState({
         first_name: '',
@@ -19,8 +20,54 @@ export const Register = ()=>{
 
     const navigate = useNavigate();
 
+    const validateForm = () => {
+        const newErrors = {};
+    
+        if (!formData.first_name.trim()) {
+          newErrors.first_name = "First name is required";
+        } else if (formData.first_name.length < 3) {
+          newErrors.first_name = "First name must be at least 3 characters";
+        } else if (formData.first_name.length > 20) {
+          newErrors.first_name = "First name must be less than 20 characters";
+        }
+    
+        if (!formData.last_name.trim()) {
+          newErrors.last_name = "Last name is required";
+        } else if (formData.last_name.length < 3) {
+          newErrors.last_name = "Last name must be at least 3 characters";
+        } else if (formData.last_name.length > 20) {
+          newErrors.last_name = "Last name must be less than 20 characters";
+        }
+    
+        if (!formData.email.trim()) {
+          newErrors.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+          newErrors.email = "Invalid email address";
+        }
+    
+        if (!formData.password.trim()) {
+          newErrors.password = "Password is required";
+        } else if (formData.password.length < 8) {
+          newErrors.password = "Password must be at least 8 characters";
+        }
+    
+        if (!formData.confirm_password.trim()) {
+          newErrors.confirm_password = "Confirm password is required";
+        } else if (formData.confirm_password !== formData.password) {
+          newErrors.confirm_password = "Passwords do not match";
+        }
+    
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+      };
+    
+
+
     const handleSubmit = async (e)=>{
         e.preventDefault();
+        if (!validateForm()) {
+            return;
+          }
         setIsLoading(true);
         try{
             const response= await register(formData);
@@ -89,6 +136,9 @@ export const Register = ()=>{
                     name="first_name"
                     className="mt-1 py-1 w-full rounded-md border border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                     />
+                    {errors.first_name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.first_name}</p>
+                  )}
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
@@ -104,6 +154,9 @@ export const Register = ()=>{
                     name="last_name"
                     className="mt-1 py-1 w-full rounded-md border border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                     />
+                    {errors.last_name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>
+                  )}
                 </div>
 
                 <div className="col-span-6">
@@ -117,6 +170,9 @@ export const Register = ()=>{
                     name="email"
                     className="mt-1 py-1 w-full rounded-md border border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                     />
+                    {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
@@ -130,6 +186,9 @@ export const Register = ()=>{
                     name="password"
                     className="mt-1 py-1 w-full rounded-md border border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                     />
+                    {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                  )}
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
@@ -142,9 +201,12 @@ export const Register = ()=>{
                     onChange={handleChange}
                     type="password"
                     id="PasswordConfirmation"
-                    name="password_confirmation"
+                    name="confirm_password"
                     className="mt-1 py-1 w-full rounded-md border border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                     />
+                    {errors.confirm_password && (
+                    <p className="text-red-500 text-sm mt-1">{errors.confirm_password}</p>
+                  )}
                 </div>
 
 

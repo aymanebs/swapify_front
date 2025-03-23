@@ -39,7 +39,7 @@ function Profile() {
     async function fetchUserItems() {
       try {
         const data = await getAllUserItems();
-        setUserItems(data);
+        setUserItems(Array.isArray(data) ? data : []);
       }
       catch (error) {
         toast.error('Failed to fetch items');
@@ -134,7 +134,8 @@ useEffect(() => {
   const handleDeleteItem = async (itemId) => {
     try {
       await deleteItem(itemId);
-      setUserItems(userItems.filter((item) => item.id !== itemId));
+      console.log('user items', userItems);
+      setUserItems(userItems.filter((item) => item._id !== itemId));
     }
     catch (error) {
       console.error('Failed to delete item');
@@ -286,9 +287,9 @@ useEffect(() => {
                 >
                   <InboxIcon className="h-4 w-4 mr-2" />
                   Received
-                  {receivedRequests.length > 0 && (
+                  {receivedRequests?.length > 0 && (
                     <span className="ml-2 bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full text-xs">
-                      {receivedRequests.length}
+                      {receivedRequests?.length}
                     </span>
                   )}
                 </button>
@@ -299,9 +300,9 @@ useEffect(() => {
                 >
                   <SendHorizontal className="h-4 w-4 mr-2" />
                   Sent
-                  {sentRequests.length > 0 && (
+                  {sentRequests?.length > 0 && (
                     <span className="ml-2 bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full text-xs">
-                      {sentRequests.length}
+                      {sentRequests?.length}
                     </span>
                   )}
                 </button>
@@ -347,7 +348,7 @@ useEffect(() => {
                   <>
                     <div className="flex justify-between items-center mb-6">
                       <h2 className="text-xl font-semibold text-gray-800">
-                        My Items ({userItems.length})
+                        My Items ({userItems?.length || 0})
                       </h2>
                       <button
                         className="bg-sky-600 text-white px-4 py-2 rounded-md flex items-center hover:bg-sky-700 transition"
@@ -391,11 +392,11 @@ useEffect(() => {
                 {activeTab === 'requests' && (
                   isLoading ? (
                     <Spinner />
-                  ) : receivedRequests.length>0 ? (
+                  ) : receivedRequests?.length>0 ? (
                     <>
                       <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-semibold text-gray-800">
-                          Received Requests ({receivedRequests.length})
+                          Received Requests ({receivedRequests?.length})
                         </h2>
                       </div>
                       <ReceivedRequests
@@ -418,11 +419,11 @@ useEffect(() => {
                 {activeTab === 'sent' && (
                   isLoading ? (
                     <Spinner />
-                  ) : sentRequests.length>0 ? (
+                  ) : sentRequests?.length>0 ? (
                     <>
                       <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-semibold text-gray-800">
-                          Sent Requests ({sentRequests.length})
+                          Sent Requests ({sentRequests?.length})
                         </h2>
                       </div>
                       <SentRequests

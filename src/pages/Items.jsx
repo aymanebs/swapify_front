@@ -112,6 +112,7 @@ export const Items = () => {
       }
   
       setFiltredItems(filteredItems);
+      setCurrentPage(1);
       return updatedCategories;
     });
   };

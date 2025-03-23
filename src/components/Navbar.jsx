@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../store/usersSlice";
-import socket, { identifyUser, onTradeRequestReceived } from "../services/socketService";
+import socket, { identifyUser, onItemDeleted, onTradeRequestReceived } from "../services/socketService";
 
 
 export const Navbar = () => {
@@ -55,9 +55,14 @@ export const Navbar = () => {
         { message: payload.message, id: payload.receiverId, isRead: false, time: new Date().toLocaleTimeString() },
       ]);
     };
-
+    const handleItemDeleted = (payload) => {
+      setNotificationsList((prevList) => [
+        ...prevList,
+        { message: payload.message, id: payload.itemId, isRead: false, time: new Date().toLocaleTimeString() },
+      ]);
+    };
     onTradeRequestReceived(handleIncomingRequest);
-
+    onItemDeleted(handleItemDeleted);
 
     return () => {
       socket.off('tradeRequestCreated', handleIncomingRequest);

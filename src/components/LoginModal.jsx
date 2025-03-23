@@ -15,6 +15,7 @@ const LoginModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [effect, setEffect] = useState(false);
   const token = searchParams.get('token');
+  const [errors, setErrors] = useState({});
 
 
       useEffect(()=>{
@@ -28,12 +29,30 @@ const LoginModal = ({ isOpen, onClose }) => {
         handleGoogleLogin();
       },[token])
     
-
+      const validateForm = () => {
+        const newErrors = {};
+    
+        if (!email.trim()) {
+          newErrors.email = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          newErrors.email = 'Invalid email address';
+        }
+    
+        if (!password.trim()) {
+          newErrors.password = 'Password is required';
+        } else if (password.length < 8) {
+          newErrors.password = 'Password must be at least 8 characters';
+        }
+    
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Return true if no errors
+      };
 
 
 
   const handleLogin = async(e) => {
     e.preventDefault();
+    if(! validateForm()) return;
     setIsLoading(true);
     try{
       const formData = {email,password};
@@ -123,8 +142,11 @@ const LoginModal = ({ isOpen, onClose }) => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
               placeholder="you@example.com"
-              required
+              
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div className="mb-6">
@@ -143,8 +165,12 @@ const LoginModal = ({ isOpen, onClose }) => {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
               placeholder="••••••••"
-              required
+              
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+
           </div>
 
           <button

@@ -40,4 +40,11 @@ socket.on('requestCompleted', (data) => {
   window.location.href = `/rate/${data.receiverId}?requestId=${data.requestId}`;
 });
 
+// Listen for item deleted notifications
+export const onItemDeleted = (callback) => {
+  socket.on('itemDeleted', callback);
+};
+
+
+
 export default socket;

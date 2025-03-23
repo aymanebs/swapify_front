@@ -5,7 +5,6 @@ import { getImageUrl } from '../helpers/getImageUrl';
 import ConfirmationModal from './confirmationModal';
 
 const ReceivedRequests = ({ requests, onAccept, onRefuse, onComplete, onCancel }) => {
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState({
     title: '',
