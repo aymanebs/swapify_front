@@ -24,14 +24,6 @@ function Swap () {
   const [senderItems, setSenderItems] = useState([]);
   const navigate = useNavigate();
 
-  const swapDetails = {
-    itemOffered: 'Professional DSLR Camera',
-    itemWanted: 'Focusrite Scarlett 2i2 Audio Interface',
-    otherUser: 'John Smith',
-    lastActive: '2 hours ago',
-    userRating: 4.8,
-    completedSwaps: 27,
-  };
 
   useEffect (() => {
     async function fetchSenderItems(){

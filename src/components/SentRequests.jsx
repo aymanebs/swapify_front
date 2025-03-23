@@ -3,7 +3,9 @@ import { MessageCircle, AlertCircle, CheckCircle, XCircle, Clock } from 'lucide-
 import { daysPassed } from '../helpers/daysPassed';
 import { getImageUrl } from '../helpers/getImageUrl';
 
-const SentRequests = ({ requests, onStartChat }) => {
+const SentRequests = ({ requests }) => {
+
+ 
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -51,15 +53,6 @@ const SentRequests = ({ requests, onStartChat }) => {
                   {getStatusIcon(request.status)}
                   <span className="ml-2 capitalize">{request.status}</span>
                 </span>
-                {/* {request.status === 'accepted' && (
-                  <button
-                    onClick={() => onStartChat(request._id, request?.receiver._id)}
-                    className="flex items-center px-3 py-1.5 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition"
-                  >
-                    <MessageCircle className="h-4 w-4 mr-1" />
-                    Chat
-                  </button>
-                )} */}
               </div>
             </div>
             
@@ -86,8 +79,8 @@ const SentRequests = ({ requests, onStartChat }) => {
                 <div className="mt-2">
                   <div className="flex items-center">
                     <img 
-                      src={getImageUrl(request.requestedItem?.photos[0])} 
-                      alt={request.requestedItem?.name}
+                      src={getImageUrl(request.itemRequested?.photos[0])} 
+                      alt={request.itemRequested?.name}
                       className="w-16 h-16 rounded-lg object-cover"
                     />
                     <div className="ml-3">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Package2, Cuboid as Cube, Star, Shield, Camera, UserCheck, ArrowRight, RefreshCw, Check, MessageCircle, Package, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from '../helpers/getImageUrl';
 
 const SwapProposal = ({senderItems,targetItem, submit}) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -8,7 +9,8 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
   const [messageLength, setMessageLength] = useState(0);
   const [showInfo, setShowInfo] = useState(null);
 
-
+console.log('loging targetItem',targetItem);
+console.log('logging selectedItem: ',selectedItem);
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {receiver: targetItem.userId._id, itemOffered: selectedItem, itemRequested: targetItem._id};
@@ -40,7 +42,7 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
             <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden border-2 border-white shadow-md">
               {selectedItem ? (
                 <img 
-                  src={senderItems.find(item => item._id === selectedItem)?.image} 
+                  src={getImageUrl(senderItems.find(item => item._id === selectedItem)?.photos[0])} 
                   alt="Your selected item"
                   className="w-full h-full object-cover" 
                 />
@@ -67,7 +69,7 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
         <div className="flex items-center">
           <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden border-2 border-white shadow-md">
             <img 
-              src={targetItem?.image} 
+              src={getImageUrl(targetItem?.photos[0])} 
               alt={targetItem?.name}
               className="w-full h-full object-cover" 
             />
@@ -104,7 +106,7 @@ const SwapProposal = ({senderItems,targetItem, submit}) => {
                 >
                   <div className="relative h-48 overflow-hidden">
                     <img
-                      src={item?.image}
+                      src={getImageUrl(item.photos[0])}
                       alt={item.name}
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />

@@ -109,13 +109,13 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     
-    // Update form data with new files
+   
     setFormData({
       ...formData,
       photos: [...formData.photos, ...files]
     });
     
-    // Create preview URLs for the images
+
     const newPreviewImages = files.map(file => ({
       file,
       url: URL.createObjectURL(file)
@@ -133,16 +133,16 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
   };
 
   const removeImage = (index) => {
-    // Create new arrays without the removed image
+  
     const updatedPhotos = [...formData.photos];
     updatedPhotos.splice(index, 1);
     
     const updatedPreviews = [...previewImages];
-    // Revoke the object URL to avoid memory leaks
+   
     URL.revokeObjectURL(updatedPreviews[index].url);
     updatedPreviews.splice(index, 1);
     
-    // Update state
+   
     setFormData({
       ...formData,
       photos: updatedPhotos
@@ -151,7 +151,6 @@ const CreateItemForm = ({onSubmit, onCancel }) => {
   };
   
 
-   // Clean up object URLs when component unmounts
    useEffect(() => {
     return () => {
       previewImages.forEach(image => URL.revokeObjectURL(image.url));

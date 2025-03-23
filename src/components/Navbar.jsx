@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../store/usersSlice";
-import socket, { identifyUser, onTradeRequestReceived } from "../services/socketService";
+import socket, { identifyUser, onItemDeleted, onTradeRequestReceived } from "../services/socketService";
 
 
 export const Navbar = () => {
@@ -18,7 +18,9 @@ export const Navbar = () => {
   const user = useSelector((state) => state.users.loggedUser);
   const dispatch = useDispatch();
 
-  // Calculate the number of unread notifications
+  console.log(user);
+  
+
   const unreadNotificationsCount = notificationsList.filter(
     (notification) => !notification.isRead
   ).length;
@@ -44,19 +46,24 @@ export const Navbar = () => {
     };
   }, [user]);
 
-  // Listen for real-time trade request notifications
+
   useEffect(() => {
     const handleIncomingRequest = (payload) => {
-      // Add the new notification to the list
+
       setNotificationsList((prevList) => [
         ...prevList,
         { message: payload.message, id: payload.receiverId, isRead: false, time: new Date().toLocaleTimeString() },
       ]);
     };
-
+    const handleItemDeleted = (payload) => {
+      setNotificationsList((prevList) => [
+        ...prevList,
+        { message: payload.message, id: payload.itemId, isRead: false, time: new Date().toLocaleTimeString() },
+      ]);
+    };
     onTradeRequestReceived(handleIncomingRequest);
+    onItemDeleted(handleItemDeleted);
 
-    // Cleanup when component unmounts
     return () => {
       socket.off('tradeRequestCreated', handleIncomingRequest);
     };
@@ -206,7 +213,7 @@ export const Navbar = () => {
                   >
                     <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-sky-300 flex-shrink-0 ring-2 ring-sky-100">
                       <img
-                        src={`${user.avatar}`}
+                        src={user.avatar}
                         alt="User profile"
                         className="w-full h-full object-cover"
                       />
